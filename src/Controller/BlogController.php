@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
       */
       public function create()
       {
-         return $this->render('blog/show.html.twig', [
+         return $this->render('blog/create.html.twig', [
              'data' => 'New Post'
          ]);
       }
