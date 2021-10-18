@@ -17,8 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
       */
      public function index()
      {
+        $rep   = $this->getDoctrine()->getRepository(Post::class);
+        $posts = $rep->findAll();
+
         return $this->render('blog/index.html.twig', [
-            'data' => 'all-posts'
+            'posts' => $posts
         ]);
      }
 
@@ -37,12 +40,13 @@ use Symfony\Component\Routing\Annotation\Route;
                 ->getForm();
         
         $form->handleRequest( $request );
-        if( $form->isSubmitted() && $form->isValid() && 0 ){
+        if( $form->isSubmitted() && $form->isValid()){
            
+            $post->setPublished(new \DateTime);
             $em->persist( $post);
             $em->flush();
 
-            return $this->redirectToRoute('blog-create');
+            return $this->redirectToRoute('blog-index');
         }
 
 
