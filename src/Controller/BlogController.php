@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -54,6 +55,32 @@ use Symfony\Component\Routing\Annotation\Route;
              'data' => 'New Post',
              'mForm' => $form->createView()
          ]);
+      }
+
+
+
+      /**
+       * @Route("/prostam" , name="prostam-index", methods={"GET","POST"})
+       */
+      public function ajaxAction(Request $request){
+            $students = $this->getDoctrine() 
+                ->getRepository(Post::class) 
+                ->findAll();  
+                
+            if ($request->isXmlHttpRequest() || $request->query->get('showJson') == 1) {  
+                $jsonData = array();  
+                $idx = 0;  
+                foreach($students as $student) {  
+                $temp = array(
+                    'title' => $student->getTitle(),  
+                    'content' => $student->getContent(),  
+                );   
+                $jsonData[$idx++] = $temp;  
+                } 
+                return new JsonResponse($jsonData); 
+            } else { 
+                return $this->json(['null']);
+            } 
       }
  }
 ?>
