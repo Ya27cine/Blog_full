@@ -35,7 +35,6 @@
         <!-- Main Content-->
 
         {% block body %}
-        
         {% endblock %}
 
 
@@ -80,12 +79,14 @@
 
         
 
-         {% block javascripts %}
+        
             {#{{ encore_entry_script_tags('app') }}#}
             <!-- Bootstrap core JS-->
             <script src="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js') }}"></script>
             <!-- Core theme JS-->
             <script src="{{ asset('js/scripts.js') }}"></script>
-        {% endblock %}
+            <script language = "javascript" src = "https://code.jquery.com/jquery-2.2.4.min.js"></script><script language = "javascript"> </script>
+             {% block javascripts %}
+             {% endblock %}
     </body>
 </html>
