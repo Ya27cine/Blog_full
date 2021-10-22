@@ -26,9 +26,14 @@
                 <div class="col-md-10 col-lg-8 col-xl-7">
                         {% for post in posts %}
                             <!-- Post preview-->
+
+                                {% set linkimg = 'assets/img/posts/p' ~ (post.id) ~ '.jpg'%}
+
+                                <img src="{{ asset(linkimg) }}" class="img-fluid" alt="">
+
                                 <div class="post-preview">
-                                    <a href="post.html">
-                                        <h2 class="post-title">{{ post.title}}</h2>
+                                    <a href=" {{ path('blog-show', {'id': post.id})}}">
+                                        <h2 class="post-title">{{ post.title}} </h2>
                                     </a>
                                         <h5 class="post-subtitle"> {{ post.content | slice(0, 77) }}...</h5>
                                     <p class="post-meta">

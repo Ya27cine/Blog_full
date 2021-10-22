@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
       { 
          return $this->redirectToRoute('blog-index');
       }
+
      /**
       * @Route("/blog", name="blog-index")
       */
@@ -32,6 +33,22 @@ use Symfony\Component\Routing\Annotation\Route;
             'posts' => $posts
         ]);
      }
+
+      /**
+      * @Route("/blog/post/{id}", name="blog-show", requirements={ "id" = "\d+" } )
+      */
+      public function show($id)
+      {
+         $rep   = $this->getDoctrine()->getRepository(Post::class);
+         $post = $rep->find($id);
+ 
+         return $this->render('blog/show.html.twig', [
+             'post' => $post
+         ]);
+      }
+
+
+
 
      /**
       * @Route("/blog/create", name="blog-create")
@@ -63,6 +80,9 @@ use Symfony\Component\Routing\Annotation\Route;
              'mForm' => $form->createView()
          ]);
       }
+
+
+
 
 
 
