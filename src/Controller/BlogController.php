@@ -14,6 +14,13 @@ use Symfony\Component\Routing\Annotation\Route;
  class BlogController extends AbstractController
  {
      /**
+      * @Route("/", name="blog-default")
+      */
+      public function toblog()
+      { 
+         return $this->redirectToRoute('blog-index');
+      }
+     /**
       * @Route("/blog", name="blog-index")
       */
      public function index()
