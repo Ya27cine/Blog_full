@@ -1,4 +1,52 @@
-<!-- Navigation-->
+<header>
+	<!--- Navbar --->
+	<nav id="headnev" class="navbar navbar-expand-lg navbar-default navbar-fixed-top">
+		<div class="container">
+			<a class="navbar-brand text-white" href="#"><i class="fa fa-graduation-cap fa-lg mr-2"></i>BLOG</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nvbCollapse" aria-controls="nvbCollapse">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="nvbCollapse">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item pl-1">
+						<a class="nav-link" href="#"><i class="fa fa-home fa-fw mr-1"></i>Blog</a>
+					</li>
+					
+					<li class="nav-item pl-1">
+						<a class="nav-link" href="#"><i class="fa fa-info-circle fa-fw mr-1"></i>About</a>
+					</li>
+					<li class="nav-item pl-1">
+						<a class="nav-link" href="#"><i class="fa fa-phone fa-fw fa-rotate-180 mr-1"></i>Contact</a>
+					</li>
+
+                    {% if app.user %}
+                        <li class="nav-item pl-1">
+                            <a class="nav-link text-info" href="{{ path('blog-create')}}"><i class="fas fa-edit fa-fw mr-1"></i>New post</a>
+                        </li>
+                        <li class="nav-item pl-1">
+                            <span class="nav-link text-success" ><i class="fas fa-user-alt fa-fw mr-1"></i>{{ app.user.username }}</span>
+                        </li>
+                        <li class="nav-item pl-1">
+                            <a class="nav-link text-dark" href="{{ path('security_logout')}}"><i class="fas fa-sign-out-alt fa-fw mr-1"></i>Logout</a>
+                        </li>
+
+                    {% else %}
+                        <li class="nav-item pl-1">
+                            <a class="nav-link" href="{{ path('security_registration')}}"><i class="fa fa-user-plus fa-fw mr-1"></i>Sign in</a>
+                        </li>
+                        <li class="nav-item pl-1">
+                            <a class="nav-link" href="{{ path('security_login')}}"><i class="fas fa-sign-in-alt fa-fw mr-1"></i>Login</a>
+                        </li>
+                    {% endif %}
+					
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<!--# Navbar #-->
+	</header>
+
+<!-- Navigation
         <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
             <div class="container px-4 px-lg-5">
                 <a class="navbar-brand" href="{{ path('blog-index') }}">Start PROSTAN</a>
@@ -15,3 +63,4 @@
                 </div>
             </div>
         </nav>
+-->

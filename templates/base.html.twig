@@ -11,16 +11,32 @@
         <meta name="author" content="" />
         <link rel="icon" type="image/x-icon" href="{{ asset('assets/favicon.ico') }}" />
         <!-- Font Awesome icons (free version)-->
-        <script src="{{ asset('https://use.fontawesome.com/releases/v5.15.4/js/all.js') }}" crossorigin="anonymous"></script>
+        <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
         <link href="{{ asset('https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800') }}" rel="stylesheet" type="text/css" />
         <!-- Core theme CSS (includes Bootstrap)-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
         
         {#{{ encore_entry_link_tags('app') }}#}
         {% block stylesheets %}
-               
+        <style>
+                .navbar {
+                     background-color: #484848;
+        
+                 }
+                .navbar .navbar-nav .nav-link { color: #fff; }
+                .navbar .navbar-nav .nav-link:hover { color: #fbc531; }
+                .navbar .navbar-nav .active > .nav-link { color: #fbc531; }
+
+                footer a.text-light:hover { color: #fed136!important; text-decoration: none; }
+                footer .cizgi { border-right: 1px solid #535e67; }
+                @media (max-width: 992px) { footer .cizgi { border-right: none; } }
+
+                
+        </style>
+              
         {% endblock %}
 
        
@@ -86,6 +102,7 @@
             <!-- Core theme JS-->
             <script src="{{ asset('js/scripts.js') }}"></script>
             <script language = "javascript" src = "https://code.jquery.com/jquery-2.2.4.min.js"></script><script language = "javascript"> </script>
+           
              {% block javascripts %}
              {% endblock %}
     </body>
