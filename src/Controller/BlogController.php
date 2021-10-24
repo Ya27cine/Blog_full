@@ -10,9 +10,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
- class BlogController extends AbstractController
+class BlogController extends AbstractController
  {
+
+    private $security;
+
+    public function __construct(Security $s)
+    {
+        $this->security = $s;
+    }
+
      /**
       * @Route("/", name="blog-default")
       */
@@ -47,8 +56,23 @@ use Symfony\Component\Routing\Annotation\Route;
          ]);
       }
 
+       /**
+      * @Route("/blog/my-posts", name="blog-my-posts")
+      */
+      public function myposts()
+      {
+        $user  = $this->security->getUser();
+        if(! $user)
+            return $this->redirectToRoute('security-login');
 
+         $rep   = $this->getDoctrine()->getRepository(Post::class);
 
+         $posts = $rep->findBy( ['user' => $user->getId() ] );
+ 
+         return $this->render('blog/my-list.html.twig', [
+             'posts' => $posts
+         ]);
+      }
 
      /**
       * @Route("/blog/create", name="blog-create")
@@ -56,6 +80,11 @@ use Symfony\Component\Routing\Annotation\Route;
       public function create(Request $request)
       {
         $em   = $this->getDoctrine()->getManager();
+        $user  = $this->security->getUser();
+        if(! $user)
+            return $this->redirectToRoute('security-login');
+
+
         $post = new Post;
 
         $form = $this->createFormBuilder( $post )
@@ -68,6 +97,8 @@ use Symfony\Component\Routing\Annotation\Route;
         if( $form->isSubmitted() && $form->isValid()){
            
             $post->setPublished(new \DateTime);
+            $post->setUser($user);
+
             $em->persist( $post);
             $em->flush();
 
@@ -77,7 +108,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
          return $this->render('blog/create.html.twig', [
              'data' => 'New Post',
-             'mForm' => $form->createView()
+             'mForm' => $form->createView(),
+             'user' => $user
          ]);
       }
 
