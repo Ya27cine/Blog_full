@@ -4,11 +4,15 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -19,19 +23,25 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email()
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=8)
      */
     private $password;
 
+    /**
+     * @Assert\EqualTo(propertyPath="password", message="This value should be equal to password")
+     */
     public $confirm_password;
 
     public function getId(): ?int
@@ -73,6 +83,16 @@ class User
         $this->password = $password;
 
         return $this;
+    }
+
+
+    public function getRoles(){
+        return ['ROLE_ADMIN'];
+    }
+
+    public function getSalt(){
+    }   
+    public function eraseCredentials(){
     }
 
 }
