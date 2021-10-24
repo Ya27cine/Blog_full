@@ -25,11 +25,39 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-md-12 mx-auto">
+        <div class="col-md-9 mx-auto">
             <h1> {{'registration on the site'| title}} </h1>    
             {{ form_start(form)}}
-            {{ form_widget(form)}}
-            <button class="btn btn-success" type="submit">Registration !</button>
+
+            <div class="form-group">
+                 {{ form_row(form.username, { 
+                            'label': 'Name ', 
+                            'attr':{ 'class': 'form-control', 'placeholder': 'Nom user ...'}
+                            })}}
+            </div>
+
+           <div class="form-group">
+                 {{ form_row(form.email, { 
+                            'label': 'Email ', 
+                            'attr':{ 'class': 'form-control', 'placeholder': 'Email ...'}
+                            })}}
+            </div>
+
+            <div class="form-group">
+                 {{ form_row(form.password, { 
+                            'label': 'Password ', 
+                            'attr':{ 'class': 'form-control', 'placeholder': 'Password ...'}
+                            })}}
+            </div>
+
+            <div class="form-group">
+                 {{ form_row(form.confirm_password, { 
+                            'label': 'Confirm Password ', 
+                            'attr':{ 'class': 'form-control', 'placeholder': 'Confirm Password ...'}
+                            })}}
+            </div>
+
+            <button class="btn btn-success btn-block" type="submit">Registration !</button>
             {{ form_end(form)}}
         </div>
         
