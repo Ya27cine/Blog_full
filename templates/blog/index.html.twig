@@ -22,32 +22,45 @@
           <!-- Main Content-->
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
-            <h2> List Posts </h2>
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                        {% for post in posts %}
-                            <!-- Post preview-->
 
-                                {% set linkimg = 'assets/img/posts/p' ~ (post.id) ~ '.jpg'%}
 
-                                <img src="{{ asset(linkimg) }}" class="img-fluid" alt="">
+            {% if posts is null %}
+                    <h2> List Posts </h2>
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                                {% for post in posts %}
+                                    <!-- Post preview-->
 
-                                <div class="post-preview">
-                                    <a href=" {{ path('blog-show', {'id': post.id})}}">
-                                        <h2 class="post-title">{{ post.title}} </h2>
-                                    </a>
-                                        <h5 class="post-subtitle"> {{ post.content | slice(0, 77) }}...</h5>
-                                    <p class="post-meta">
-                                        Posted by
-                                        <a href="#!">Start Prostam</a>
-                                        on {{ post.published | date('d M  Y') }}
-                                    </p>
-                                </div>
-                                <!-- Divider-->
-                                <hr class="my-4" />
-                        {% endfor %}
-                    
-                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>
-                </div>
+                                        {% set linkimg = 'assets/img/posts/p' ~ (post.id) ~ '.jpg'%}
+
+                                        <img src="{{ asset(linkimg) }}" class="img-fluid" alt="">
+
+                                        <div class="post-preview">
+                                            <a href=" {{ path('blog-show', {'id': post.id})}}">
+                                                <h2 class="post-title">{{ post.title}} </h2>
+                                            </a>
+                                                <h5 class="post-subtitle"> {{ post.content | slice(0, 77) }}...</h5>
+                                            <p class="post-meta">
+                                                Posted by
+                                                <a href="#!">Start Prostam</a>
+                                                on {{ post.published | date('d M  Y') }}
+                                            </p>
+                                        </div>
+                                        <!-- Divider-->
+                                        <hr class="my-4" />
+                                {% endfor %}
+                            
+                            <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>
+                        </div>
+            {% else %}
+                 <h3> there are no articles !!</h3>
+                 <div>
+                    <p>
+                      We invited to create an article
+                        <a href="{{ path('blog-create')}}"> New Article </a>
+                    </p>
+                 </div>
+                
+            {% endif %}
             </div>
         </div>
         
