@@ -63,7 +63,7 @@ class BlogController extends AbstractController
       {
         $user  = $this->security->getUser();
         if(! $user)
-            return $this->redirectToRoute('security-login');
+            return $this->redirectToRoute('security_login');
 
          $rep   = $this->getDoctrine()->getRepository(Post::class);
 

@@ -19,6 +19,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+
+    const ROLE_USER = "ROLE_USER";
+    const ROLE_ADMIN = "ROLE_ADMIN";
+    const DEFAULT_ROLES = [ self:: ROLE_USER ];
+
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -45,6 +51,11 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @ORM\Column(type="simple_array", length=255, nullable=true)
+     */
+    private $roles;
+
+    /**
      * @Assert\EqualTo(propertyPath="password", message="This value should be equal to password")
      */
     public $confirm_password;
@@ -58,6 +69,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->roles = self::DEFAULT_ROLES;
     }
 
     public function getId(): ?int
@@ -103,7 +115,10 @@ class User implements UserInterface
 
 
     public function getRoles(){
-        return ['ROLE_ADMIN'];
+        return $this->roles;
+    }
+    public function settRoles($roles){
+        $this->roles = $roles;
     }
 
     public function getSalt(){
