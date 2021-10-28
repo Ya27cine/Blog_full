@@ -2,6 +2,7 @@
  namespace App\Controller;
 
 use App\Entity\Post;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -33,15 +34,35 @@ class BlogController extends AbstractController
      /**
       * @Route("/blog", name="blog-index")
       */
-     public function index()
+     public function index(PaginatorInterface $paginator, Request $request)
      {
         $rep   = $this->getDoctrine()->getRepository(Post::class);
-        $posts = $rep->findAll();
+        $posts = $rep->findBy(array(), array('published' => 'DESC'));
 
+        $categories = [
+                        ['name' => 'FrontEnd', 'count' => 5] ,
+                        ['name' => 'BackEnd',  'count' => 7] ,
+                        ['name' => 'FullStak', 'count' => 2] ,
+                        ['name' => 'Mobile',   'count' => 11] ,
+                        ['name' => 'Security', 'count' => 4] 
+                    ];
+
+        $data = $paginator->paginate(
+            $posts,
+            $request->query->getInt('page', 1), // num de la page en cours, 1 par default
+            4
+        );
+        $data->setTemplate('pagination/bootstrap_v5_pagination.html.twig');
+
+        $cate = $request->query->get('category', 'ALL');
+        
         return $this->render('blog/index.html.twig', [
-            'posts' => $posts
+            'posts' => $data,
+            'cate' => $cate,
+            'categories' => $categories
         ]);
      }
+
 
       /**
       * @Route("/blog/post/{id}", name="blog-show", requirements={ "id" = "\d+" } )
@@ -67,7 +88,7 @@ class BlogController extends AbstractController
 
          $rep   = $this->getDoctrine()->getRepository(Post::class);
 
-         $posts = $rep->findBy( ['user' => $user->getId() ] );
+         $posts = $rep->findBy( ['user' => $user->getId() ], array('published' => 'ASC') );
  
          return $this->render('blog/my-list.html.twig', [
              'posts' => $posts
