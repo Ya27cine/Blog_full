@@ -1,6 +1,7 @@
 <?php 
  namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Post;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,29 +37,37 @@ class BlogController extends AbstractController
       */
      public function index(PaginatorInterface $paginator, Request $request)
      {
+         // get para URL 
+        $nameCateg = $request->query->get('category', 'ALL');
+
+        // get All categories 
+        $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+
         $rep   = $this->getDoctrine()->getRepository(Post::class);
-        $posts = $rep->findBy(array(), array('published' => 'DESC'));
 
-        $categories = [
-                        ['name' => 'FrontEnd', 'count' => 5] ,
-                        ['name' => 'BackEnd',  'count' => 7] ,
-                        ['name' => 'FullStak', 'count' => 2] ,
-                        ['name' => 'Mobile',   'count' => 11] ,
-                        ['name' => 'Security', 'count' => 4] 
-                    ];
+        if( $nameCateg != "ALL"){
+            // get id category 
+            $id_category = $this->getDoctrine()->getRepository(Category::class)->findBy(array('name' => $nameCateg));
+            // get post by category :
+            $posts = $rep->findBy(array('category' => $id_category ), array('published' => 'DESC'));
+        }
+        else
+            // get all posts
+            $posts = $rep->findBy(array(), array('published' => 'DESC'));
 
+        // prepare Pagination :
         $data = $paginator->paginate(
             $posts,
             $request->query->getInt('page', 1), // num de la page en cours, 1 par default
             4
         );
-        $data->setTemplate('pagination/bootstrap_v5_pagination.html.twig');
 
-        $cate = $request->query->get('category', 'ALL');
+        // set Template pagina
+        $data->setTemplate('pagination/bootstrap_v5_pagination.html.twig');
+        
         
         return $this->render('blog/index.html.twig', [
             'posts' => $data,
-            'cate' => $cate,
             'categories' => $categories
         ]);
      }
