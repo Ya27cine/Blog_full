@@ -31,7 +31,7 @@ class SecurityConttrollerController extends AbstractController
             $objectManager->persist( $user );
             $objectManager->flush();
 
-            $this->redirectToRoute('security_login');
+            return $this->redirectToRoute('security_login');
         }
 
         return $this->render('security/registration.html.twig', [
@@ -43,7 +43,6 @@ class SecurityConttrollerController extends AbstractController
      * @Route("/login", name="security_login")
      */
     public function login(){
-        
         return $this->render('security/login.html.twig');
     }
 
