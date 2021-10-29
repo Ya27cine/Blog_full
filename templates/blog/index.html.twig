@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %} 
 
 {% block header %}
-     <!-- Page Header-->
+     <!-- Page Header
         <header class="masthead" style="background-image: url('assets/img/home-bg.jpg')">
             <div class="container position-relative px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -13,15 +13,15 @@
                     </div>
                 </div>
             </div>
-        </header>
+        </header>-->
 {% endblock %}
 
 
 {% block body %}
     
           <!-- Main Content-->
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5">
+        <div class="container  my-2">
+            <div class="row">
 
 
             {% if posts  %}
@@ -36,7 +36,7 @@
                                             <a href="{{ path('blog-index') }}">
                                              {{ 'All' }}  
                                              <span class="badge badge-info">
-                                                 0 
+                                                 {{ posts_sum }}
                                              </span>
                                             </a>
                                         </li>
@@ -54,8 +54,24 @@
                                     {% endfor %}
                                     </ul>
                             </div>
+
+                            <div class="card my-3">
+                                <h5 class="card-header"> More Interactive</h5>
+                                    <ul class="list-group list-group-flush">
+                                    {% for K, category in categories %}
+                                            <li class="list-group-item"> 
+                                                {% set linkimg = 'assets/img/posts/p' ~ (K%11+1) ~ '.jpg'%}
+                                                <img src="{{ asset(linkimg) }}" class="img-fluid" alt="" width="20%">
+                                                <a href="?category={{ category.name  }}">
+                                                 {{ category.name }}  
+                                                  
+                                                </a>
+                                            </li>
+                                    {% endfor %}
+                                    </ul>
+                             </div>
                         </div>
-                        <div class="col-md-7 col-lg-6 col-xl-7">
+                        <div class="col-md-6">
                                 {% for post in posts  %}
                                     <!-- Post preview-->
 
@@ -95,16 +111,24 @@
                             </nav>
                         </div>
 
-                        <div class="col-md-2">
-                            <h3>last Artiles</h3>
-                            <ul>
-                            {% for category in categories %}
-                               
-                                    <li> 
-                                        <a href=""> {{ category.name }}  (0)</a>
-                                    </li>
-                            {% endfor %}
-                            </ul>
+                        <div class="col-md-3">
+                                                
+                            <div class="card">
+                                <h5 class="card-header"> last 5 Articles</h5>
+                                    <ul class="list-group list-group-flush">
+                                    {% for K, category in categories %}
+                                            <li class="list-group-item"> 
+                                                {% set linkimg = 'assets/img/posts/p' ~ (K%11+1) ~ '.jpg'%}
+                                                <img src="{{ asset(linkimg) }}" class="img-fluid" alt="" width="20%">
+                                                <a href="?category={{ category.name  }}">
+                                                 {{ category.name }}  
+                                                  
+                                                </a>
+                                            </li>
+                                    {% endfor %}
+                                    </ul>
+                             </div>
+
                         </div>
             {% else %}
                  <h3> there are no articles !!</h3>

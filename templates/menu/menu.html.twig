@@ -3,8 +3,9 @@
 	<nav id="headnev" class="navbar navbar-expand-lg navbar-default navbar-fixed-top">
 		<div class="container">
 			<a class="navbar-brand text-white" href="#"><i class="fa fa-graduation-cap fa-lg mr-2"></i>BLOG</a>
-            
-            <span class="nav-link text-warning" ><i class="fas fa-user-alt fa-fw mr-1"></i>{{ app.user.username }}</span>
+             {% if app.user %}
+                <span class="nav-link text-warning" ><i class="fas fa-user-alt fa-fw mr-1"></i>{{ app.user.username }}</span>
+            {% endif %}
             
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nvbCollapse" aria-controls="nvbCollapse">
 				<span class="navbar-toggler-icon"></span>

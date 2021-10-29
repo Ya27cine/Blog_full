@@ -75,15 +75,21 @@ class BlogController extends AbstractController
          */
         $em = $this->getDoctrine()->getManager();
         $categories = $em->createQuery("SELECT c.name ,count(p.id) as occ FROM App\Entity\Post p, App\Entity\Category c WHERE c.id = p.category GROUP BY c.name")->getResult();
-
-
         
+        // count the number of articles in all categories :
+        $post_sum = array_sum( array_column( $categories, 'occ') );
+
 
         return $this->render('blog/index.html.twig', [
             'posts' => $data,
-            'categories' => $categories
+            'categories' => $categories,
+            'posts_sum' => $post_sum
         ]);
      }
+
+
+
+
 
 
       /**
@@ -99,16 +105,23 @@ class BlogController extends AbstractController
          ]);
       }
 
+
+
+
+
        /**
       * @Route("/blog/my-posts", name="blog-my-posts")
       */
       public function myposts()
       {
-        
-        $user = $this->security->getUser();
-        
-         $rep   = $this->getDoctrine()->getRepository(Post::class);
-        try {
+        try{
+            // check if a user is login
+            $user = $this->security->getUser();
+            if(! $user)
+                return $this->redirectToRoute('security_login');
+
+            // if so, we return all his articles :
+            $rep   = $this->getDoctrine()->getRepository(Post::class);
             $posts = $rep->findBy( ['user' => $user->getId() ], array('published' => 'ASC') );
             
         } catch (\Throwable $th) {
@@ -119,6 +132,10 @@ class BlogController extends AbstractController
              'posts' => $posts
          ]);
       }
+
+
+
+
 
      /**
       * @Route("/blog/create", name="blog-create")
