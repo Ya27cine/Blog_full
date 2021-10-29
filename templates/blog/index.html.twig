@@ -55,21 +55,24 @@
                                     </ul>
                             </div>
 
-                            <div class="card my-3">
-                                <h5 class="card-header"> More Interactive</h5>
-                                    <ul class="list-group list-group-flush">
-                                    {% for K, category in categories %}
-                                            <li class="list-group-item"> 
-                                                {% set linkimg = 'assets/img/posts/p' ~ (K%11+1) ~ '.jpg'%}
-                                                <img src="{{ asset(linkimg) }}" class="img-fluid" alt="" width="20%">
-                                                <a href="?category={{ category.name  }}">
-                                                 {{ category.name }}  
-                                                  
-                                                </a>
-                                            </li>
-                                    {% endfor %}
-                                    </ul>
-                             </div>
+                            {% for c in categories %}                   
+                                <div class="card my-3">
+                                    <h5 class="card-header"> last 5 Articles of {{ c.name }}</h5>
+                                        <ul class="list-group list-group-flush">
+                                        {% for K, category in categories %}
+                                                <li class="list-group-item"> 
+                                                    {% set linkimg = 'assets/img/posts/p' ~ (K%11+1) ~ '.jpg'%}
+                                                    <img src="{{ asset(linkimg) }}" class="img-fluid" alt="" width="20%">
+                                                    <a href="?category={{ category.name  }}">
+                                                    {{ category.name }}  
+                                                    
+                                                    </a>
+                                                </li>
+                                        {% endfor %}
+                                        </ul>
+                                </div>
+                            {% endfor %}
+                          
                         </div>
                         <div class="col-md-6">
                                 {% for post in posts  %}
@@ -112,10 +115,19 @@
                         </div>
 
                         <div class="col-md-3">
-                                                
-                            <div class="card">
-                                <h5 class="card-header"> last 5 Articles</h5>
+                            <div class="card my-3">
+                                <h5 class="card-header"> the 7 More Interactive</h5>
                                     <ul class="list-group list-group-flush">
+                                    {% for K, category in categories %}
+                                            <li class="list-group-item"> 
+                                                {% set linkimg = 'assets/img/posts/p' ~ (K%11+1) ~ '.jpg'%}
+                                                <img src="{{ asset(linkimg) }}" class="img-fluid" alt="" width="20%">
+                                                <a href="?category={{ category.name  }}">
+                                                 {{ category.name }}  
+                                                  
+                                                </a>
+                                            </li>
+                                    {% endfor %}
                                     {% for K, category in categories %}
                                             <li class="list-group-item"> 
                                                 {% set linkimg = 'assets/img/posts/p' ~ (K%11+1) ~ '.jpg'%}
@@ -128,7 +140,6 @@
                                     {% endfor %}
                                     </ul>
                              </div>
-
                         </div>
             {% else %}
                  <h3> there are no articles !!</h3>
