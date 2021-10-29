@@ -74,16 +74,22 @@ class BlogController extends AbstractController
          *  SELECT c.name , count(*) FROM `post` p, `category` c WHERE c.id = p.category_id GROUP BY c.name 
          */
         $em = $this->getDoctrine()->getManager();
-        $categories = $em->createQuery("SELECT c.name ,  count(p.id) as occ FROM App\Entity\Post p, App\Entity\Category c WHERE c.id = p.category GROUP BY c.name")->getResult();
-
-
+        $categories = $em->createQuery("SELECT c.name ,count(p.id) as occ FROM App\Entity\Post p, App\Entity\Category c WHERE c.id = p.category GROUP BY c.name")->getResult();
         
+        // count the number of articles in all categories :
+        $post_sum = array_sum( array_column( $categories, 'occ') );
+
 
         return $this->render('blog/index.html.twig', [
             'posts' => $data,
-            'categories' => $categories
+            'categories' => $categories,
+            'posts_sum' => $post_sum
         ]);
      }
+
+
+
+
 
 
       /**
@@ -99,23 +105,37 @@ class BlogController extends AbstractController
          ]);
       }
 
+
+
+
+
        /**
       * @Route("/blog/my-posts", name="blog-my-posts")
       */
       public function myposts()
       {
-        $user  = $this->security->getUser();
-        if(! $user)
-            return $this->redirectToRoute('security_login');
+        try{
+            // check if a user is login
+            $user = $this->security->getUser();
+            if(! $user)
+                return $this->redirectToRoute('security_login');
 
-         $rep   = $this->getDoctrine()->getRepository(Post::class);
-
-         $posts = $rep->findBy( ['user' => $user->getId() ], array('published' => 'ASC') );
+            // if so, we return all his articles :
+            $rep   = $this->getDoctrine()->getRepository(Post::class);
+            $posts = $rep->findBy( ['user' => $user->getId() ], array('published' => 'ASC') );
+            
+        } catch (\Throwable $th) {
+             die($th);
+        }
  
          return $this->render('blog/my-list.html.twig', [
              'posts' => $posts
          ]);
       }
+
+
+
+
 
      /**
       * @Route("/blog/create", name="blog-create")
