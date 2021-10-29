@@ -30,7 +30,7 @@
                                 {% for post in posts %}
                                     <!-- Post preview-->
 
-                                        {% set linkimg = 'assets/img/posts/p' ~ (post.id) ~ '.jpg'%}
+                                        {% set linkimg = 'assets/img/posts/p' ~ (post.id%11) ~ '.jpg'%}
 
                                         <img src="{{ asset(linkimg) }}" class="img-fluid" alt="">
 
@@ -41,8 +41,17 @@
                                                 <h5 class="post-subtitle"> {{ post.content | slice(0, 77) }}...</h5>
                                             <p class="post-meta">
                                                 Posted by
-                                                <a href="">{{ post.user.username }}</a>
+                                                <a href="">
+                                                     <span class="badge badge-primary">
+                                                        {{ post.user.username}}
+                                                    </span>
+                                                </a>
                                                 on {{ post.published | date('d M  Y') }}
+                                            </p>
+                                             <p>
+                                                <span class="badge badge-danger">
+                                                    #{{ post.category.name }}
+                                                </span>
                                             </p>
                                         </div>
                                         <!-- Divider-->

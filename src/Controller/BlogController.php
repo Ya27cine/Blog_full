@@ -74,7 +74,7 @@ class BlogController extends AbstractController
          *  SELECT c.name , count(*) FROM `post` p, `category` c WHERE c.id = p.category_id GROUP BY c.name 
          */
         $em = $this->getDoctrine()->getManager();
-        $categories = $em->createQuery("SELECT c.name ,  count(p.id) as occ FROM App\Entity\Post p, App\Entity\Category c WHERE c.id = p.category GROUP BY c.name")->getResult();
+        $categories = $em->createQuery("SELECT c.name ,count(p.id) as occ FROM App\Entity\Post p, App\Entity\Category c WHERE c.id = p.category GROUP BY c.name")->getResult();
 
 
         
@@ -104,13 +104,16 @@ class BlogController extends AbstractController
       */
       public function myposts()
       {
-        $user  = $this->security->getUser();
-        if(! $user)
-            return $this->redirectToRoute('security_login');
-
+        
+        $user = $this->security->getUser();
+        
          $rep   = $this->getDoctrine()->getRepository(Post::class);
-
-         $posts = $rep->findBy( ['user' => $user->getId() ], array('published' => 'ASC') );
+        try {
+            $posts = $rep->findBy( ['user' => $user->getId() ], array('published' => 'ASC') );
+            
+        } catch (\Throwable $th) {
+             die($th);
+        }
  
          return $this->render('blog/my-list.html.twig', [
              'posts' => $posts
