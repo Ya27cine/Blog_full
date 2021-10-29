@@ -38,24 +38,26 @@ class BlogController extends AbstractController
       */
      public function index(PaginatorInterface $paginator, Request $request)
      {
-         // get para URL 
-        $nameCateg = $request->query->get('category', 'ALL');
+        
+       
+        // Get repository  Entity Post :
+        $rep_post   = $this->getDoctrine()->getRepository(Post::class);
 
-        // get All categories 
-        $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+         // Get params  URL 
+         $referred_Categ = $request->query->get('category', 'ALL');
 
-        $rep   = $this->getDoctrine()->getRepository(Post::class);
+        if( $referred_Categ != "ALL"){
+            // get the id of the category indicated in the URL 
+            $id_category = $this->getDoctrine()->getRepository(Category::class)->findBy(array('name' => $referred_Categ));
 
-        if( $nameCateg != "ALL"){
-            // get id category 
-            $id_category = $this->getDoctrine()->getRepository(Category::class)->findBy(array('name' => $nameCateg));
-            // get post by category :
-            $posts = $rep->findBy(array('category' => $id_category ), array('published' => 'DESC'));
+            // fetch  all articles belongoin to this category  ( $referred_Categ ):
+            $posts = $rep_post->findBy(array('category' => $id_category ), array('published' => 'DESC'));
         }
         else
-            // get all posts
-            $posts = $rep->findBy(array(), array('published' => 'DESC'));
+            // Get all articles
+            $posts = $rep_post->findBy(array(), array('published' => 'DESC'));
 
+          
         // prepare Pagination :
         $data = $paginator->paginate(
             $posts,
@@ -65,6 +67,16 @@ class BlogController extends AbstractController
 
         // set Template pagina
         $data->setTemplate('pagination/bootstrap_v5_pagination.html.twig');
+
+         /*
+         * Count the number of articles by categories 
+         * SQL :
+         *  SELECT c.name , count(*) FROM `post` p, `category` c WHERE c.id = p.category_id GROUP BY c.name 
+         */
+        $em = $this->getDoctrine()->getManager();
+        $categories = $em->createQuery("SELECT c.name ,  count(p.id) as occ FROM App\Entity\Post p, App\Entity\Category c WHERE c.id = p.category GROUP BY c.name")->getResult();
+
+
         
 
         return $this->render('blog/index.html.twig', [
@@ -172,5 +184,6 @@ class BlogController extends AbstractController
                 return $this->json(['null']);
             } 
       }
+
  }
 ?>

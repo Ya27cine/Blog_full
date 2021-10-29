@@ -31,11 +31,24 @@
                             <div class="card">
                                 <h5 class="card-header">Categories</h5>
                                     <ul class="list-group list-group-flush">
+
+                                        <li class="list-group-item"> 
+                                            <a href="{{ path('blog-index') }}">
+                                             {{ 'All' }}  
+                                             <span class="badge badge-info">
+                                                 0 
+                                             </span>
+                                            </a>
+                                        </li>
+
                                     {% for category in categories %}
                                     
                                             <li class="list-group-item"> 
                                                 <a href="?category={{ category.name  }}">
-                                                 {{ category.name }}  ( 0 )
+                                                 {{ category.name }}  
+                                                    <span class="badge badge-info">
+                                                        {{ category.occ }} 
+                                                    </span>
                                                 </a>
                                             </li>
                                     {% endfor %}
@@ -54,12 +67,23 @@
                                             <a href=" {{ path('blog-show', {'id': post.id})}}">
                                                 <h2 class="post-title">{{ post.title | title }} </h2>
                                             </a>
-                                                <h5 class="post-subtitle"> {{ post.content | slice(0, 77) }}...</h5>
+                                    
+                                            <h5 class="post-subtitle"> {{ post.content | slice(0, 77) }}...</h5>
                                             <p class="post-meta">
                                                 Posted by
-                                                <a href="">{{ post.user.username}}</a>
-                                                on {{ post.published | date('d M  Y') }} / #{{ post.category.name }}
+                                                <a href="">
+                                                    <span class="badge badge-primary">
+                                                        {{ post.user.username}}
+                                                    </span>
+                                                </a>
+                                                on {{ post.published | date('d M  Y') }}  
                                             </p>
+                                            <p>
+                                                <span class="badge badge-danger">
+                                                    #{{ post.category.name }}
+                                                </span>
+                                            </p>
+
                                         </div>
                                         <!-- Divider-->
                                         <hr class="my-4" />
