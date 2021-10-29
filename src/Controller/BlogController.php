@@ -3,6 +3,7 @@
 
 use App\Entity\Category;
 use App\Entity\Post;
+use App\Form\PostType;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -65,7 +66,7 @@ class BlogController extends AbstractController
         // set Template pagina
         $data->setTemplate('pagination/bootstrap_v5_pagination.html.twig');
         
-        
+
         return $this->render('blog/index.html.twig', [
             'posts' => $data,
             'categories' => $categories
@@ -117,11 +118,11 @@ class BlogController extends AbstractController
 
         $post = new Post;
 
-        $form = $this->createFormBuilder( $post )
-                ->add("title", TextType::class)
+        $form = $this->createForm(PostType::class, $post);
+             /*   ->add("title", TextType::class)
                 ->add("content", TextareaType::class)
                 ->add("create", SubmitType::class, ['label' => "New Post"])
-                ->getForm();
+                ->getForm();*/
         
         $form->handleRequest( $request );
         if( $form->isSubmitted() && $form->isValid()){
