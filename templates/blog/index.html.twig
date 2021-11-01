@@ -41,18 +41,8 @@
                                              </span>
                                             </a>
                                         </li>
-
-                                    {% for category in categories %}
-                                    
-                                            <li class="list-group-item"> 
-                                                <a href="?category={{ category.name  }}">
-                                                 {{ category.name }}  
-                                                    <span class="badge badge-info">
-                                                        {{ category.occ }} 
-                                                    </span>
-                                                </a>
-                                            </li>
-                                    {% endfor %}
+                                        <!--  Show List categories :  -->
+                                             {% include "blog/components/categories.html.twig" %}
                                     </ul>
                             </div>
 
@@ -78,35 +68,11 @@
                         <div class="col-md-6">
                                 {% for post in posts  %}
                                     <!-- Post preview-->
-
-                                        {% set linkimg = 'assets/img/posts/p' ~ (post.id%11) ~ '.jpg'%}
-
-                                        <img src="{{ asset(linkimg) }}" class="img-fluid" alt="">
-
-                                        <div class="post-preview">
-                                            <a href=" {{ path('blog-show', {'id': post.id})}}">
-                                                <h2 class="post-title">{{ post.title | title }} </h2>
-                                            </a>
                                     
-                                            <h5 class="post-subtitle"> {{ post.content | slice(0, 77) }}...</h5>
-                                            <p class="post-meta">
-                                                Posted by
-                                                <a href="">
-                                                    <span class="badge badge-primary">
-                                                        {{ post.user.username}}
-                                                    </span>
-                                                </a>
-                                                on {{ post.published | date('d M  Y') }}  
-                                            </p>
-                                            <p>
-                                                <span class="badge badge-danger">
-                                                    #{{ post.category.name }}
-                                                </span>
-                                            </p>
-
-                                        </div>
-                                        <!-- Divider-->
-                                        <hr class="my-4" />
+                                    {% include "blog/components/post.html.twig" %}
+                                        
+                                     <!-- Divider-->
+                                    <hr class="my-4" />
                                 {% endfor %}
                             
                             <!-- <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>  -->

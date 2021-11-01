@@ -40,18 +40,8 @@
                                             </span>
                                             </a>
                                         </li>
-
-                                    {% for category in categories %}
-                                    
-                                            <li class="list-group-item"> 
-                                                <a href="?category={{ category.name  }}">
-                                                {{ category.name }}  
-                                                    <span class="badge badge-info">
-                                                        {{ category.occ }} 
-                                                    </span>
-                                                </a>
-                                            </li>
-                                    {% endfor %}
+                                        <!--  Show List categories :  -->
+                                             {% include "blog/components/categories.html.twig" %}
                                     </ul>
                             </div>
                         </div>
@@ -60,39 +50,16 @@
                                 {% for post in posts %}
                                     <!-- Post preview-->
                                        
-                                        {% set linkimg = 'assets/img/posts/p' ~ (post.id%11) ~ '.jpg'%}
+                                    {% include "blog/components/post.html.twig" %}     
 
-                                        <img src="{{ asset(linkimg) }}" class="img-fluid" alt="" width="50%">
+                                    <!-- Action delete & Edit -->
+                                    <div class="d-flex flex-wrap align-items-center">
+                                        <a class="nav-link text-danger text-right" href="{{ path('blog-delete',{id: post.id})}}"><i class="far fa-trash-alt"></i></a>
+                                        <a class="nav-link text-success"           href="{{ path('blog-update',{id: post.id})}}"><i class="fas fa-edit"></i></a>
+                                    </div>
 
-                                        <div class="post-preview">
-                                            <a href=" {{ path('blog-show', {'id': post.id})}}">
-                                                <h2 class="post-title">{{ post.title}} </h2>
-                                            </a>
-                                                <h5 class="post-subtitle"> {{ post.content | slice(0, 55) }}...</h5>
-                                            <p class="post-meta">
-                                                Posted by
-                                                <a href="">
-                                                     <span class="badge badge-primary">
-                                                        {{ post.user.username}}
-                                                    </span>
-                                                </a>
-                                                on {{ post.published | date('d M  Y') }}
-                                            </p>
-                                             <p>
-                                                <span class="badge badge-danger">
-                                                    #{{ post.category.name }}
-                                                </span>
-                                            </p>
-                                        </div>
-
-                                        <!-- Action delete & Edit -->
-                                        <div class="d-flex flex-wrap align-items-center">
-                                            <a class="nav-link text-danger text-right" href="{{ path('blog-delete',{id: post.id})}}"><i class="far fa-trash-alt"></i></a>
-                                            <a class="nav-link text-success"           href="{{ path('blog-update',{id: post.id})}}"><i class="fas fa-edit"></i></a>
-                                         </div>
-
-                                       <!-- Divider-->
-                                        <hr class="my-4" />
+                                    <!-- Divider-->
+                                    <hr class="my-4" />
                                 {% endfor %}
                             
                             <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>

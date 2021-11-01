@@ -1,0 +1,16 @@
+{% if categories %}
+
+        {% for category in categories %}
+                <li class="list-group-item"> 
+                    <a href="?category={{ category.name  }}">
+                        {{ category.name }}  
+                        <span class="badge badge-info">
+                            {{ category.occ }} 
+                        </span>
+                    </a>
+                </li>
+        {% endfor %}
+
+{% endif %}
+
+    

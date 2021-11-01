@@ -1,0 +1,29 @@
+    
+{% if post %}
+        {% set linkimg = 'assets/img/posts/p' ~ (post.id%11) ~ '.jpg'%}
+
+        <img src="{{ asset(linkimg) }}" class="img-fluid" alt="">
+
+        <div class="post-preview">
+            <a href=" {{ path('blog-show', {'id': post.id})}}">
+                <h2 class="post-title">{{ post.title | title }} </h2>
+            </a>
+
+            <h5 class="post-subtitle"> {{ post.content | slice(0, 77) }}...</h5>
+            <p class="post-meta">
+                Posted by
+                <a href="">
+                    <span class="badge badge-primary">
+                        {{ post.user.username}}
+                    </span>
+                </a>
+                on {{ post.published | date('d M  Y') }}  
+            </p>
+            <p>
+                <span class="badge badge-danger">
+                    #{{ post.category.name }}
+                </span>
+            </p>
+
+        </div>
+{% endif %}
