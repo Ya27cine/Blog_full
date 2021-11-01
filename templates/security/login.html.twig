@@ -4,21 +4,16 @@
 
 {% block header %}
 
- <!-- Page Header
-        <header class="masthead" style="background-image: url('assets/img/post-bg.jpg')">
-            <div class="container position-relative px-4 px-lg-5">
+ <!-- Page Header 
+        <header class="masthead" style="background-image: url('assets/img/post-bg.jpg'); height: 5%;">
+            <div class="container position-relative">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div class="post-heading">
                             <h1> ..</h1>
                             <h2 class="subheading">
-                                     {{ 'Login' | title }}
+                                     Home | {{ 'Login' | title }}
                             </h2>
-                            <span class="meta">
-                                Posted by
-                                <a href="#!">Start Bootstrap</a>
-                                on {{ "now"|date("m/d/Y") }}
-                            </span>
                         </div>
                     </div>
                 </div>
@@ -43,22 +38,33 @@
                 <form action="{{ path('security_login')}}" method="post">
 
                     <div class="form-group">
-                        <input class="form-control" type="text" placeholder="Email ..." name="_username" required>
+                        <label for="_username">Email Address *</label>
+                        <input class="form-control" type="text" placeholder="demo@example.com" name="_username" id="_username" required>
                         </input>
                     </div>
 
                     <div class="form-group my-2">
-                        <input class="form-control" type="password" placeholder="Password ..." name="_password" required>
+                        <label for="_username"> Password * </label>
+                        <input class="form-control" type="password" placeholder="************" name="_password" required>
                         </input>
                     </div>
-
-                    <div class="form-group">
-                        <button class="btn btn-success btn-block" type="submit">Login !</button>
+                   
+                    <div class="row my-3">
+                        <div class="col-md-3">
+                            <button class="btn btn-primary btn-block" type="submit">Login !</button>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="text-sm-right">
+                                Don't you have an account ? <a class="text-primary" href="{{path('security_registration')}}">Click here</a> to Signup
+                            </p>
+                        </div>
                     </div>
+                    
 
 
                 </form>
         </div>
     </div>
-        
+    
+
 {% endblock %}
