@@ -185,10 +185,9 @@ class BlogController extends AbstractController
       /**
       * @Route("/blog/{id}/update", name="blog-update", requirements={ "id" = "\d+" })
       */
-      public function update(Post $post=null, Request $request)  
+      public function update(Post $post=null, Request $request, UserService $userService, EntityManagerInterface $em)  
       {
-        $em   = $this->getDoctrine()->getManager();
-        $user  = $this->security->getUser();
+        $user  = $userService->isAuth();
         if(! $user)
             return $this->redirectToRoute('security-login');
 
