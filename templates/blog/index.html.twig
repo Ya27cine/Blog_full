@@ -29,7 +29,8 @@
                         <div class="col-md-3 my-3">
                             
                             <div class="card">
-                                <h5 class="card-header">Categories</h5>
+                                <h5 class="card-header"><i class="fas fa-list"></i>
+                                            Categories</h5>
                                     <ul class="list-group list-group-flush">
 
                                         <li class="list-group-item"> 
@@ -57,7 +58,7 @@
 
                             {% for c in categories %}                   
                                 <div class="card my-3">
-                                    <h5 class="card-header"> last 5 Articles of {{ c.name }}</h5>
+                                    <h5 class="card-header"> {{ ('last 5 articles of ' ~ c.name) | title }}</h5>
                                         <ul class="list-group list-group-flush">
                                         {% for K, category in categories %}
                                                 <li class="list-group-item"> 
@@ -116,7 +117,7 @@
 
                         <div class="col-md-3">
                             <div class="card my-3">
-                                <h5 class="card-header"> the 7 More Interactive</h5>
+                                <h5 class="card-header"> {{'the 7 more interactive' | title}}</h5>
                                     <ul class="list-group list-group-flush">
                                     {% for K, category in categories %}
                                             <li class="list-group-item"> 
