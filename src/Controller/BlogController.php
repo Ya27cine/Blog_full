@@ -5,6 +5,7 @@ use App\Entity\Post;
 use App\Form\PostType;
 use App\Service\BlogService;
 use App\Service\UserService;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -149,10 +150,9 @@ class BlogController extends AbstractController
      /**
       * @Route("/blog/create", name="blog-create")
       */
-      public function create(Request $request)
+      public function create(Request $request, EntityManagerInterface $em, UserService $userService)
       {
-        $em   = $this->getDoctrine()->getManager();
-        $user  = $this->security->getUser();
+        $user  = $userService->isAuth();
         if(! $user)
             return $this->redirectToRoute('security-login');
 
