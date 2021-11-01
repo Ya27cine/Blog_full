@@ -45,7 +45,7 @@ class BlogController extends AbstractController
             7
         );
 
-        // set Template pagina
+        // set Template paginator_posts
         $paginator_posts->setTemplate('pagination/bootstrap_v5_pagination.html.twig');
          
          // Count the number of articles by categories 
@@ -100,7 +100,7 @@ class BlogController extends AbstractController
     /**
       * @Route("/blog/my-posts", name="blog-my-posts")
       */
-      public function myposts(Request $request, BlogService $blogService, UserService $userService)
+      public function myposts(PaginatorInterface $paginator, Request $request, BlogService $blogService, UserService $userService)
       {
         try{
             // get User auth
@@ -117,6 +117,14 @@ class BlogController extends AbstractController
             
             // fetch  all posts / Or belongoin to this category  ( $referred_name_categ ):
             $my_posts = $blogService->posts( $referred_name_categ, $user);
+
+            $paginator_my_posts = $paginator->paginate(
+                $my_posts,
+                $request->query->getInt('page', 1), // num de la page en cours, 1 par default
+                3
+            );
+            // set Template paginator_posts
+            $paginator_my_posts->setTemplate('pagination/bootstrap_v5_pagination.html.twig');
          
             // Count the number of posts by categories 
             $occ_my_post_by_categ = $blogService->countMyPotsByCategories( $user );
@@ -129,7 +137,7 @@ class BlogController extends AbstractController
         }
  
          return $this->render('blog/my-list.html.twig', [
-             'posts' => $my_posts,
+             'posts' => $paginator_my_posts,
              'categories' => $occ_my_post_by_categ,
              'count_my_posts' => $count_my_posts
          ]);
