@@ -5,6 +5,7 @@ use App\Entity\Category;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use App\Service\BlogService;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -39,7 +40,6 @@ class BlogController extends AbstractController
       */
      public function index(PaginatorInterface $paginator, Request $request)
      {
-        
        
         // Get repository  Entity Post :
         $rep_post   = $this->getDoctrine()->getRepository(Post::class);
@@ -124,60 +124,51 @@ class BlogController extends AbstractController
 
 
 
-       /**
+     /**
       * @Route("/blog/my-posts", name="blog-my-posts")
       */
-      public function myposts(Request $request)
+      public function myposts(Request $request, BlogService $blogService)
       {
         try{
             // check if a user is login
-            $user = $this->security->getUser();
-            if(! $user)
+            if(! $blogService->isAuth() )
                 return $this->redirectToRoute('security_login');
 
-            // Get repository  Entity Post :
-            $rep_post   = $this->getDoctrine()->getRepository(Post::class);
+            // get User auth
+            $user = $blogService->user;
 
-              // Get params  URL 
-            $referred_Categ = $request->query->get('category', 'ALL');
+            // My posts :
+            $my_posts = null;
 
-            if( $referred_Categ != "ALL"){
-                // get the id of the category indicated in the URL 
-                $id_category = $this->getDoctrine()->getRepository(Category::class)->findBy(array('name' => $referred_Categ));
-    
-                // fetch  all articles belongoin to this category  ( $referred_Categ ):
-                $posts = $rep_post->findBy(array('user' => $user->getId(),'category' => $id_category ), array('published' => 'DESC'));
+            // Get params  URL 
+            $referred_name_categ = $request->query->get('category', 'ALL'); // take All By default
+
+            if( $referred_name_categ == "ALL"){
+                 // if so, we return all his posts :
+                $my_posts =$blogService->getPosts($user);
             }
-            else
-                // if so, we return all his articles :
-                $posts = $rep_post->findBy( ['user' => $user->getId() ], array('published' => 'ASC') );
+            else{
+                // get the id of the category indicated in the URL 
+                $id_category = $blogService->getIdCategoryByName( $referred_name_categ );
 
-            
+                // fetch  all posts belongoin to this category  ( $referred_name_categ ):
+                $my_posts = $blogService->getPostsByCategory($user, $id_category);
+            }
+               
+            // Count the number of posts by categories 
+            $occ_my_post_by_categ = $blogService->countMyPotsByCategories();
 
-            $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
-
-            /*
-            * Count the number of articles by categories 
-            * SQL :
-            *  SELECT c.name , count(*) FROM `post` p, `category` c WHERE c.id = p.category_id GROUP BY c.name 
-            */
-            $em = $this->getDoctrine()->getManager();
-            $categories = 
-               $em->createQuery("SELECT c.name ,count(p.id) as occ FROM App\Entity\Post p, App\Entity\Category c WHERE p.user = ".$user->getId()." and c.id = p.category GROUP BY c.name")->getResult();
-            
             // count the number of articles in all categories :
-            $post_sum = array_sum( array_column( $categories, 'occ') );
+            $count_my_posts = $blogService->countMyPosts( $user );
 
-
-            
         } catch (\Throwable $th) {
              die($th);
         }
  
          return $this->render('blog/my-list.html.twig', [
-             'posts' => $posts,
-             'categories' => $categories,
-             'post_sum' => $post_sum
+             'posts' => $my_posts,
+             'categories' => $occ_my_post_by_categ,
+             'count_my_posts' => $count_my_posts
          ]);
       }
 
