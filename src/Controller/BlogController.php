@@ -1,31 +1,20 @@
 <?php 
  namespace App\Controller;
 
-use App\Entity\Category;
 use App\Entity\Post;
 use App\Form\PostType;
-use App\Repository\PostRepository;
 use App\Service\BlogService;
+use App\Service\UserService;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
 class BlogController extends AbstractController
  {
-
-    private $security;
-
-    public function __construct(Security $s)
-    {
-        $this->security = $s;
-    }
+    public function __construct(){}
 
      /**
       * @Route("/", name="blog-default")
@@ -38,51 +27,35 @@ class BlogController extends AbstractController
      /**
       * @Route("/blog", name="blog-index")
       */
-     public function index(PaginatorInterface $paginator, Request $request)
+     public function index(PaginatorInterface $paginator, Request $request, BlogService $blogService)
      {
-       
-        // Get repository  Entity Post :
-        $rep_post   = $this->getDoctrine()->getRepository(Post::class);
+        // posts 
+        $posts = null;
 
          // Get params  URL 
-         $referred_Categ = $request->query->get('category', 'ALL');
+         $referred_name_categ = $request->query->get('category', 'ALL');
 
-        if( $referred_Categ != "ALL"){
-            // get the id of the category indicated in the URL 
-            $id_category = $this->getDoctrine()->getRepository(Category::class)->findBy(array('name' => $referred_Categ));
-
-            // fetch  all articles belongoin to this category  ( $referred_Categ ):
-            $posts = $rep_post->findBy(array('category' => $id_category ), array('published' => 'DESC'));
-        }
-        else
-            // Get all articles
-            $posts = $rep_post->findBy(array(), array('published' => 'DESC'));
-
-          
+         // get all posts
+        $posts = $blogService->posts($referred_name_categ);
+               
         // prepare Pagination :
-        $data = $paginator->paginate(
+        $paginator_posts = $paginator->paginate(
             $posts,
             $request->query->getInt('page', 1), // num de la page en cours, 1 par default
-            4
+            7
         );
 
         // set Template pagina
-        $data->setTemplate('pagination/bootstrap_v5_pagination.html.twig');
-
-         /*
-         * Count the number of articles by categories 
-         * SQL :
-         *  SELECT c.name , count(*) FROM `post` p, `category` c WHERE c.id = p.category_id GROUP BY c.name 
-         */
-        $em = $this->getDoctrine()->getManager();
-        $categories = $em->createQuery("SELECT c.name ,count(p.id) as occ FROM App\Entity\Post p, App\Entity\Category c WHERE c.id = p.category GROUP BY c.name")->getResult();
+        $paginator_posts->setTemplate('pagination/bootstrap_v5_pagination.html.twig');
+         
+         // Count the number of articles by categories 
+        $categories = $blogService->countPotsByCategories();
         
         // count the number of articles in all categories :
-        $post_sum = array_sum( array_column( $categories, 'occ') );
-
+        $post_sum = $blogService->countPosts();
 
         return $this->render('blog/index.html.twig', [
-            'posts' => $data,
+            'posts' => $paginator_posts,
             'categories' => $categories,
             'posts_sum' => $post_sum
         ]);
@@ -90,23 +63,23 @@ class BlogController extends AbstractController
 
 
 
-
-
-
       /**
       * @Route("/blog/post/{id}", name="blog-show", requirements={ "id" = "\d+" } )
       */
-      public function show($id)
-      {
-         $rep   = $this->getDoctrine()->getRepository(Post::class);
-         $post = $rep->find($id);
- 
-         return $this->render('blog/show.html.twig', [
+      public function show(Post $post=null)
+      { 
+        if( ! isset($post) ) // page 404
+            return $this->redirectToRoute('blog-index');
+
+        return $this->render('blog/show.html.twig', [
              'post' => $post
          ]);
       }
 
-       /**
+
+
+
+     /**
       * @Route("/blog/{id}/delete", name="blog-delete", requirements={ "id" = "\d+" } )
       */
       public function delete($id)
@@ -124,39 +97,29 @@ class BlogController extends AbstractController
 
 
 
-     /**
+    /**
       * @Route("/blog/my-posts", name="blog-my-posts")
       */
-      public function myposts(Request $request, BlogService $blogService)
+      public function myposts(Request $request, BlogService $blogService, UserService $userService)
       {
         try{
-            // check if a user is login
-            if(! $blogService->isAuth() )
-                return $this->redirectToRoute('security_login');
-
             // get User auth
-            $user = $blogService->user;
+            $user = $userService->isAuth();
+            // check if a user is login
+            if(! $user )
+                return $this->redirectToRoute('security_login');
 
             // My posts :
             $my_posts = null;
 
             // Get params  URL 
             $referred_name_categ = $request->query->get('category', 'ALL'); // take All By default
-
-            if( $referred_name_categ == "ALL"){
-                 // if so, we return all his posts :
-                $my_posts =$blogService->getPosts($user);
-            }
-            else{
-                // get the id of the category indicated in the URL 
-                $id_category = $blogService->getIdCategoryByName( $referred_name_categ );
-
-                // fetch  all posts belongoin to this category  ( $referred_name_categ ):
-                $my_posts = $blogService->getPostsByCategory($user, $id_category);
-            }
-               
+            
+            // fetch  all posts / Or belongoin to this category  ( $referred_name_categ ):
+            $my_posts = $blogService->posts( $referred_name_categ, $user);
+         
             // Count the number of posts by categories 
-            $occ_my_post_by_categ = $blogService->countMyPotsByCategories();
+            $occ_my_post_by_categ = $blogService->countMyPotsByCategories( $user );
 
             // count the number of articles in all categories :
             $count_my_posts = $blogService->countMyPosts( $user );
@@ -175,7 +138,6 @@ class BlogController extends AbstractController
 
 
 
-
      /**
       * @Route("/blog/create", name="blog-create")
       */
@@ -186,14 +148,9 @@ class BlogController extends AbstractController
         if(! $user)
             return $this->redirectToRoute('security-login');
 
-
         $post = new Post;
 
         $form = $this->createForm(PostType::class, $post);
-             /*   ->add("title", TextType::class)
-                ->add("content", TextareaType::class)
-                ->add("create", SubmitType::class, ['label' => "New Post"])
-                ->getForm();*/
         
         $form->handleRequest( $request );
         if( $form->isSubmitted() && $form->isValid()){
@@ -207,7 +164,6 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('blog-index');
         }
 
-
          return $this->render('blog/create.html.twig', [
              'data' => 'New Post',
              'mForm' => $form->createView(),
@@ -217,36 +173,30 @@ class BlogController extends AbstractController
 
 
 
+
       /**
       * @Route("/blog/{id}/update", name="blog-update", requirements={ "id" = "\d+" })
       */
-      public function update(Post $post=null, Request $request,PostRepository $postRepository)  
+      public function update(Post $post=null, Request $request)  
       {
         $em   = $this->getDoctrine()->getManager();
         $user  = $this->security->getUser();
         if(! $user)
             return $this->redirectToRoute('security-login');
 
-        //$post =  $postRepository->findBy(['id' => $id, 'user' => $user]);
-
         if( ! isset($post) ) 
              return $this->redirectToRoute('blog-index');
 
         $form = $this->createForm(PostType::class, $post);
         
-        
         $form->handleRequest( $request );
         if( $form->isSubmitted() && $form->isValid()){
-           
-           // $post->setPublished(new \DateTime);
-           // $post->setUser($user);
-
+    
             $em->persist( $post);
             $em->flush();
 
             return $this->redirectToRoute('blog-show', ['id' => $post->getId() ]);
         }
-
 
          return $this->render('blog/update.html.twig', [
              'data' => 'Update Post',
@@ -254,8 +204,6 @@ class BlogController extends AbstractController
              'user' => $user
          ]);
       }
-
-
 
 
 
