@@ -180,8 +180,6 @@ class BlogController extends AbstractController
       }
 
 
-
-
       /**
       * @Route("/blog/{id}/update", name="blog-update", requirements={ "id" = "\d+" })
       */

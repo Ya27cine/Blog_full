@@ -26,26 +26,26 @@
 {% block body %}
     <div class="row">
         <div class="col-md-9 mx-auto">
-            <h1> {{'registration on the site'| title}} </h1>    
+            <h1 class="my-3"> {{'registration on the site'| title}} </h1>    
             {{ form_start(form)}}
 
             <div class="form-group">
                  {{ form_row(form.username, { 
-                            'label': 'Name ', 
+                            'label': 'Name *', 
                             'attr':{ 'class': 'form-control', 'placeholder': 'Nom user ...'}
                             })}}
             </div>
 
            <div class="form-group">
                  {{ form_row(form.email, { 
-                            'label': 'Email ', 
+                            'label': 'Email *', 
                             'attr':{ 'class': 'form-control', 'placeholder': 'Email ...'}
                             })}}
             </div>
 
             <div class="form-group">
                  {{ form_row(form.password, { 
-                            'label': 'Password ', 
+                            'label': 'Password *', 
                             'attr':{ 'class': 'form-control', 'placeholder': 'Password ...'}
                             })}}
             </div>
@@ -60,7 +60,7 @@
                             })}}
             </div>
 
-            <button class="btn btn-success btn-block" type="submit">Registration !</button>
+            <button class="btn btn-primary btn-block my-3" type="submit">Registration !</button>
             {{ form_end(form)}}
         </div>
         
