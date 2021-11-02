@@ -8,10 +8,12 @@ use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\File;
 
 class BlogController extends AbstractController
  {
@@ -166,6 +168,29 @@ class BlogController extends AbstractController
             $post->setPublished(new \DateTime);
             $post->setUser($user);
 
+            //================
+
+            $imageFile = $form->get('image')->getData();
+            if($imageFile){
+
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $imageFile->move(
+                        $this->getParameter('upload_image_post_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+            }
+
+            //====================
+
+            $post->setImage($newFilename);
+
+
             $em->persist( $post);
             $em->flush();
 
@@ -192,11 +217,49 @@ class BlogController extends AbstractController
         if( ! isset($post) ) 
              return $this->redirectToRoute('blog-index');
 
+        // set image :   
+        try {
+            $copy_nameFile = $post->getImage();
+            $copy_file =  new File($this->getParameter('upload_image_post_directory').'/'.$post->getImage());
+
+            $post->setImage($copy_file);
+        } catch (\Throwable $th) {
+           // $post->setImage(  );
+        }
+       
+
         $form = $this->createForm(PostType::class, $post);
         
         $form->handleRequest( $request );
         if( $form->isSubmitted() && $form->isValid()){
     
+
+            //================
+
+            $imageFile = $form->get('image')->getData();
+            if($imageFile){
+
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $imageFile->move(
+                        $this->getParameter('upload_image_post_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                $post->setImage($newFilename);
+            }else{
+                $post->setImage( $copy_nameFile );
+            }
+            //====================
+
+            
+
+
             $em->persist( $post);
             $em->flush();
 
@@ -206,6 +269,7 @@ class BlogController extends AbstractController
          return $this->render('blog/update.html.twig', [
              'data' => 'Update Post',
              'mForm' => $form->createView(),
+             'image' => $copy_nameFile,
              'user' => $user
          ]);
       }

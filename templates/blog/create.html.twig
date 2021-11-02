@@ -45,8 +45,13 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label   for="category"></label>
+                                     {{ form_row( mForm.image, { 'attr': {'class': 'form-control'}} )}}
+                                </div>
+
+                                <div class="form-group">
                                     <label    for="content"></label>
-                                     {{ form_row( mForm.content, { 'attr': {'class': 'form-control', 'rows': '5'}} )}}
+                                     {{ form_row( mForm.content, { 'attr': {'class': 'form-control', 'rows': '4'}} )}}
                                 </div>
 
                                     {{ form_widget( mForm.create, { 'attr': {'class': 'btn btn-primary btn-block'}} )}}

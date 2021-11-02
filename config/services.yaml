@@ -6,6 +6,7 @@
 parameters:
     role_user: "ROLE_USER"
     role_admin: "ROLE_ADMIN"
+    upload_image_post_directory:  '%kernel.project_dir%/public/uploads/posts'
 
 services:
     # default configuration for services in *this* file
