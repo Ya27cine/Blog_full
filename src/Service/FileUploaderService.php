@@ -30,7 +30,7 @@ class FileUploaderService{
             return $newFilename;
         }
 
-        public function getFileImage($imageName): File{
+        public function getFileImage($imageName){
             try {
                 $fileImage =  new File($this->targetDirectory.'/'.$imageName);
     

@@ -2,28 +2,27 @@
 {% if post %}
         {% set linkimg = 'assets/img/posts/p' ~ (post.id%11) ~ '.jpg'%}
 
-        <img src="{{ asset(linkimg) }}" class="img-fluid" alt="">
-
-        <div class="post-preview">
-            <a href=" {{ path('blog-show', {'id': post.id})}}">
-                <h2 class="post-title">{{ post.title | title }} </h2>
-            </a>
-
-            <h5 class="post-subtitle"> {{ post.content | slice(0, 77) }}...</h5>
-            <p class="post-meta">
-                Posted by
-                <a href="">
-                    <span class="badge badge-primary">
-                        {{ post.user.username}}
-                    </span>
-                </a>
-                on {{ post.published | date('d M  Y') }}  
-            </p>
-            <p>
-                <span class="badge badge-danger">
-                    #{{ post.category.name }}
-                </span>
-            </p>
-
+        <div class="card" >
+                <img class="card-img-top" src="{{ asset(linkimg) }}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title | title }}</h5>
+                    <p class="card-text">{{ post.content | slice(0, 177) }}... 
+                        <a class="text-primary" href=" {{ path('blog-show', {'id': post.id})}}">More</a></p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">On {{ post.published | date('d M  Y') }}  </li>
+                    <li class="list-group-item">
+                         <span class="badge badge-primary">
+                             Auther: {{ post.user.username}}
+                         </span>
+                    </li>
+                </ul>
+                {% if actions %}
+                    <div class="card-body">
+                        <a class="card-link text-danger"  href="{{ path('blog-delete',{id: post.id})}}"><i class="far fa-trash-alt"></i></a>
+                        <a class="card-link text-success" href="{{ path('blog-update',{id: post.id})}}"><i class="fas fa-edit"></i></a>
+                    </div>
+                {% endif %}
         </div>
 {% endif %}
+

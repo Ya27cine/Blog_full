@@ -51,13 +51,7 @@
                                     <!-- Post preview-->
                                        
                                     {% include "blog/components/post.html.twig" %}     
-
-                                    <!-- Action delete & Edit -->
-                                    <div class="d-flex flex-wrap align-items-center">
-                                        <a class="nav-link text-danger text-right" href="{{ path('blog-delete',{id: post.id})}}"><i class="far fa-trash-alt"></i></a>
-                                        <a class="nav-link text-success"           href="{{ path('blog-update',{id: post.id})}}"><i class="fas fa-edit"></i></a>
-                                    </div>
-
+                   
                                     <!-- Divider-->
                                     <hr class="my-4" />
                                 {% endfor %}
