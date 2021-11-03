@@ -34,7 +34,7 @@ services:
     # please note that last definitions always *replace* previous ones
 
 
-App\Service\FileUploaderService\:
-    arguments:
-        $targetDirectory: '%upload_image_post_directory%'
+    App\Service\FileUploaderService:
+        arguments:
+            $targetDirectory: '%upload_image_post_directory%'
 

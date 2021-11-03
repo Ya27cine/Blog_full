@@ -4,6 +4,7 @@
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Service\BlogService;
+use App\Service\FileUploaderService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -152,7 +153,7 @@ class BlogController extends AbstractController
      /**
       * @Route("/blog/create", name="blog-create")
       */
-      public function create(Request $request, EntityManagerInterface $em, UserService $userService)
+      public function create(Request $request, EntityManagerInterface $em, UserService $userService, FileUploaderService $fileUploaderService)
       {
         $user  = $userService->isAuth();
         if(! $user)
@@ -168,28 +169,13 @@ class BlogController extends AbstractController
             $post->setPublished(new \DateTime);
             $post->setUser($user);
 
-            //================
-
+            //===== Upload Image 
             $imageFile = $form->get('image')->getData();
             if($imageFile){
-
-                $newFilename = uniqid().'.'.$imageFile->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $imageFile->move(
-                        $this->getParameter('upload_image_post_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
+                $newFilename = $fileUploaderService->upload($imageFile);
+                $post->setImage($newFilename);
             }
-
             //====================
-
-            $post->setImage($newFilename);
-
 
             $em->persist( $post);
             $em->flush();
@@ -205,10 +191,12 @@ class BlogController extends AbstractController
       }
 
 
+
+
       /**
       * @Route("/blog/{id}/update", name="blog-update", requirements={ "id" = "\d+" })
       */
-      public function update(Post $post=null, Request $request, UserService $userService, EntityManagerInterface $em)  
+      public function update(Post $post=null, Request $request, UserService $userService, EntityManagerInterface $em, FileUploaderService $fileUploaderService)  
       {
         $user  = $userService->isAuth();
         if(! $user)
@@ -217,48 +205,32 @@ class BlogController extends AbstractController
         if( ! isset($post) ) 
              return $this->redirectToRoute('blog-index');
 
-        // set image :   
-        try {
-            $copy_nameFile = $post->getImage();
-            $copy_file =  new File($this->getParameter('upload_image_post_directory').'/'.$post->getImage());
+        // if user not update image, we will again save same name    
+        $copy_nameFile = $post->getImage();
 
+        // Put image on $form :   
+        try {
+            $copy_file =  $fileUploaderService->getFileImage( $post->getImage() );
             $post->setImage($copy_file);
+
         } catch (\Throwable $th) {
            // $post->setImage(  );
         }
-       
 
         $form = $this->createForm(PostType::class, $post);
         
         $form->handleRequest( $request );
         if( $form->isSubmitted() && $form->isValid()){
-    
 
-            //================
-
+            //====== Upload Image : =============
             $imageFile = $form->get('image')->getData();
             if($imageFile){
-
-                $newFilename = uniqid().'.'.$imageFile->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $imageFile->move(
-                        $this->getParameter('upload_image_post_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-
+                $newFilename = $fileUploaderService->upload( $imageFile );
                 $post->setImage($newFilename);
             }else{
                 $post->setImage( $copy_nameFile );
             }
-            //====================
-
-            
-
+            //=====================================
 
             $em->persist( $post);
             $em->flush();

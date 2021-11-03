@@ -1,7 +1,10 @@
 <?php 
     namespace App\Service;
 
-    class FileUploaderService{
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Validator\Constraints\File;
+
+class FileUploaderService{
 
         protected $targetDirectory;
 
@@ -9,6 +12,35 @@
         {
             $this->targetDirectory = $targetDirectory;
         }
+
+        public function upload($imageFile){
+
+            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+
+            // Move the file to the directory where brochures are stored
+            try {
+                $imageFile->move(
+                    $this->targetDirectory,
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // ... handle exception if something happens during file upload
+            }
+
+            return $newFilename;
+        }
+
+        public function getFileImage($imageName): File{
+            try {
+                $fileImage =  new File($this->targetDirectory.'/'.$imageName);
+    
+                 return $fileImage;
+
+            } catch (\Throwable $th) {
+               // $post->setImage(  );
+            }
+        }
+
     }
 
 
