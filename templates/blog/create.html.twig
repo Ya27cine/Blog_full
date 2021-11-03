@@ -24,6 +24,24 @@
         -->
 {% endblock %}
 
+
+{% block breadcrumb %}
+ <div class="container">
+    <div class="row mt-2">
+        <div class="col-md-6">
+            <ol class="breadcrumb">
+                    <li><a class="text-primary" href="{{ path('blog-index')}}">Home</a>&nbsp;|&nbsp;</li>
+                    <li><a class="text-primary" href="{{ path('blog-my-posts')}}">My Posts</a>&nbsp;|&nbsp;</li>
+                    <li><span class="text-dark active" > new Post </span></li>
+            </ol>
+        </div>
+        <div class="col-md-6"> </div>
+    </div>
+ </div>
+{% endblock %}
+
+
+
 {% block body %}
 
         <!-- Post Content-->
@@ -45,8 +63,13 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label   for="category"></label>
+                                     {{ form_row( mForm.image, { 'attr': {'class': 'form-control'}} )}}
+                                </div>
+
+                                <div class="form-group">
                                     <label    for="content"></label>
-                                     {{ form_row( mForm.content, { 'attr': {'class': 'form-control', 'rows': '5'}} )}}
+                                     {{ form_row( mForm.content, { 'attr': {'class': 'form-control', 'rows': '4'}} )}}
                                 </div>
 
                                     {{ form_widget( mForm.create, { 'attr': {'class': 'btn btn-primary btn-block'}} )}}

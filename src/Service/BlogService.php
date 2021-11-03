@@ -21,7 +21,7 @@ class BlogService{
             $this->entityManager      = $entityManager;
         }
 
-
+        
         public function posts($referred_Categ, User $user=null,){
             if( $referred_Categ == "ALL"){
                 // Get all articles

@@ -24,6 +24,22 @@
         -->
 {% endblock %}
 
+{% block breadcrumb %}
+ <div class="container">
+    <div class="row mt-2">
+        <div class="col-md-6">
+            <ol class="breadcrumb">
+                    <li><a class="text-primary" href="{{ path('blog-index')}}">Home</a>&nbsp;|&nbsp;</li>
+                    <li><a class="text-primary" href="{{ path('blog-my-posts')}}">My Posts</a>&nbsp;|&nbsp;</li>
+                    <li><a class="text-primary" href="{{ path('blog-show',{id: post_id })}}">  {{  mForm.title.vars.value  }} </a>&nbsp;|&nbsp;</li>
+                    <li><span class="text-dark active" > Update Post </span></li>
+            </ol>
+        </div>
+        <div class="col-md-6"> </div>
+    </div>
+ </div>
+{% endblock %}
+
 {% block body %}
 
         <!-- Post Content-->
@@ -41,6 +57,18 @@
                                 <div class="form-group">
                                     <label   for="category"></label>
                                      {{ form_row( mForm.category, { 'attr': {'class': 'form-control'}} )}}
+                                </div>
+
+                                <div class="form-group">                                   
+                                    
+                                    <label for="category"> </label>
+                                     {{ form_row( mForm.image, { 'attr': {'class': 'form-control'}} )}}
+                                     {% if image %} 
+                                            <span class="badge bg-info my-1"> 
+                                                <a href="{{ asset('uploads/posts/' ~ image ) }}">View old Image</a>
+                                            </span> 
+                                    {% endif %}
+
                                 </div>
 
                                 <div class="form-group">

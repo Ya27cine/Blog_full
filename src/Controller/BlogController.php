@@ -4,14 +4,17 @@
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Service\BlogService;
+use App\Service\FileUploaderService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\File;
 
 class BlogController extends AbstractController
  {
@@ -58,7 +61,7 @@ class BlogController extends AbstractController
         return $this->render('blog/index.html.twig', [
             'posts' => $paginator_posts,
             'categories' => $categories,
-            'posts_sum' => $post_sum
+            'posts_sum' => $post_sum,
         ]);
      }
 
@@ -140,7 +143,7 @@ class BlogController extends AbstractController
          return $this->render('blog/my-list.html.twig', [
              'posts' => $paginator_my_posts,
              'categories' => $occ_my_post_by_categ,
-             'count_my_posts' => $count_my_posts
+             'count_my_posts' => $count_my_posts,
          ]);
       }
 
@@ -150,7 +153,7 @@ class BlogController extends AbstractController
      /**
       * @Route("/blog/create", name="blog-create")
       */
-      public function create(Request $request, EntityManagerInterface $em, UserService $userService)
+      public function create(Request $request, EntityManagerInterface $em, UserService $userService, FileUploaderService $fileUploaderService)
       {
         $user  = $userService->isAuth();
         if(! $user)
@@ -166,6 +169,14 @@ class BlogController extends AbstractController
             $post->setPublished(new \DateTime);
             $post->setUser($user);
 
+            //===== Upload Image 
+            $imageFile = $form->get('image')->getData();
+            if($imageFile){
+                $newFilename = $fileUploaderService->upload($imageFile);
+                $post->setImage($newFilename);
+            }
+            //====================
+
             $em->persist( $post);
             $em->flush();
 
@@ -180,10 +191,12 @@ class BlogController extends AbstractController
       }
 
 
+
+
       /**
       * @Route("/blog/{id}/update", name="blog-update", requirements={ "id" = "\d+" })
       */
-      public function update(Post $post=null, Request $request, UserService $userService, EntityManagerInterface $em)  
+      public function update(Post $post=null, Request $request, UserService $userService, EntityManagerInterface $em, FileUploaderService $fileUploaderService)  
       {
         $user  = $userService->isAuth();
         if(! $user)
@@ -192,11 +205,37 @@ class BlogController extends AbstractController
         if( ! isset($post) ) 
              return $this->redirectToRoute('blog-index');
 
+        //  check if u can edit this post ?
+        if( $userService->canIedit( $post )) // page 404
+                return $this->redirectToRoute('blog-index');
+
+        // if user not update image, we will again save same name    
+        $copy_nameFile = $post->getImage();
+
+        // Put image on $form :   
+        try {
+            $copy_file =  $fileUploaderService->getFileImage( $post->getImage() );
+            $post->setImage($copy_file);
+
+        } catch (\Throwable $th) {
+           // $post->setImage(  );
+        }
+
         $form = $this->createForm(PostType::class, $post);
         
         $form->handleRequest( $request );
         if( $form->isSubmitted() && $form->isValid()){
-    
+
+            //====== Upload Image : =============
+            $imageFile = $form->get('image')->getData();
+            if($imageFile){
+                $newFilename = $fileUploaderService->upload( $imageFile );
+                $post->setImage($newFilename);
+            }else{
+                $post->setImage( $copy_nameFile );
+            }
+            //=====================================
+
             $em->persist( $post);
             $em->flush();
 
@@ -206,7 +245,9 @@ class BlogController extends AbstractController
          return $this->render('blog/update.html.twig', [
              'data' => 'Update Post',
              'mForm' => $form->createView(),
-             'user' => $user
+             'image' => $copy_nameFile,
+             'user' => $user,
+             'post_id' => $post->getId()
          ]);
       }
 
