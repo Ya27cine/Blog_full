@@ -246,7 +246,8 @@ class BlogController extends AbstractController
              'data' => 'Update Post',
              'mForm' => $form->createView(),
              'image' => $copy_nameFile,
-             'user' => $user
+             'user' => $user,
+             'post_id' => $post->getId()
          ]);
       }
 

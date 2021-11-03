@@ -24,6 +24,21 @@
         
 {% endblock %}
     
+{% block breadcrumb %}
+ <div class="container">
+    <div class="row mt-2">
+        <div class="col-md-6">
+            <ol class="breadcrumb">
+                    <li><a class="text-primary" href="{{ path('blog-index')}}">Home</a>&nbsp;|&nbsp;</li>
+                    <li><a class="text-primary" href="{{ path('blog-my-posts')}}">My Posts</a>&nbsp;|&nbsp;</li>
+                    <li><span class="text-dark active" > Show  Post ( {{ post.title }} )</span></li>
+            </ol>
+        </div>
+        <div class="col-md-6"> </div>
+    </div>
+ </div>
+{% endblock %}
+
 
 {% block body %}
 
