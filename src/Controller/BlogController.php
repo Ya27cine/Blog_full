@@ -62,7 +62,6 @@ class BlogController extends AbstractController
             'posts' => $paginator_posts,
             'categories' => $categories,
             'posts_sum' => $post_sum,
-            'actions' => 0
         ]);
      }
 
@@ -145,7 +144,6 @@ class BlogController extends AbstractController
              'posts' => $paginator_my_posts,
              'categories' => $occ_my_post_by_categ,
              'count_my_posts' => $count_my_posts,
-             'actions' => 1
          ]);
       }
 

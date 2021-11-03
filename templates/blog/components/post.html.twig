@@ -5,9 +5,13 @@
         <div class="card" >
                 <img class="card-img-top" src="{{ asset(linkimg) }}" alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title">{{ post.title | title }}</h5>
+                    <h5 class="card-title"> 
+                         <a class="text-primary" href="{{ path('blog-show', {'id': post.id})}}">
+                             {{ post.title | title }}
+                        </a>
+                    </h5>
                     <p class="card-text">{{ post.content | slice(0, 177) }}... 
-                        <a class="text-primary" href=" {{ path('blog-show', {'id': post.id})}}">More</a></p>
+                        <a class="text-primary" href="{{ path('blog-show', {'id': post.id})}}">More</a></p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">On {{ post.published | date('d M  Y') }}  </li>
@@ -17,11 +21,10 @@
                          </span>
                     </li>
                 </ul>
-                {% if actions %}
-                    <div class="card-body">
-                        <a class="card-link text-danger"  href="{{ path('blog-delete',{id: post.id})}}"><i class="far fa-trash-alt"></i></a>
-                        <a class="card-link text-success" href="{{ path('blog-update',{id: post.id})}}"><i class="fas fa-edit"></i></a>
-                    </div>
+                {% if  post.user == app.user %}
+                    
+                    {% include "blog/components/postActions.html.twig" %}     
+
                 {% endif %}
         </div>
 {% endif %}
