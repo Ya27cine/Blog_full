@@ -3,18 +3,30 @@
 
            
     <div class="card-body">
+        <div class="row">
+            <div class="col-md-9"> 
 
-        <a class="card-link text-primary"  href="#"> <i class="far fa-thumbs-up"></i>10 likes</a>
-        <a class="card-link text-dark"  href="#">  <i class="fas fa-share-alt"></i> </i> </a>
+                <a class="card-link text-primary link-like"  href="{{ path('post-like',{id: post.id}) }}"> 
+                    {% if app.user and  post.islikebyuser(app.user) %}
+                        <i id="{{ 'icon-like' ~ post.id }}" class="fas fa-thumbs-up"></i>
+                    {% else %}
+                         <i id="{{ 'icon-like' ~ post.id }}" class="far fa-thumbs-up"></i>
+                    {% endif %}
+                
+                <span class="link-like"> {{ post.likes | length }} </span>
+                </a>
 
-        <div class="text-right">
-            <a class="card-link text-danger"  href="{{ path('blog-delete',{id: post.id})}}"><i class="far fa-trash-alt"></i></a>
-            <a class="card-link text-success" href="{{ path('blog-update',{id: post.id})}}"><i class="fas fa-edit"></i></a>
+                <a class="card-link text-dark"  href="#"> <i class="far fa-comments"></i> </a>
+                <a class="card-link text-dark"  href="#">  <i class="fas fa-share-alt"></i> </i> </a>
+            </div>
+            {% if  post.user == app.user %}
+                <div class="col-md-3 text-right">
+                    <a class="card-link text-danger"  href="{{ path('blog-delete',{id: post.id})}}"><i class="far fa-trash-alt"></i></a>
+                    <a class="card-link text-success" href="{{ path('blog-update',{id: post.id})}}"><i class="fas fa-edit"></i></a>
+                </div>
+            {% endif %}
         </div>
-        
     </div>
-
-    <i class=""></i>
 
 
 

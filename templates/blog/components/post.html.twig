@@ -21,18 +21,11 @@
                          </span>
                     </li>
                 </ul>
-                {% if  post.user == app.user %}
                     
-                    {% include "blog/components/postActions.html.twig" %}     
+                <!-- Show Action , {like, comment, share .... edit, delete }-->
+                {% include "blog/components/postActions.html.twig" %}     
 
-                {% else %}
-                 <div class="card-body">
-                    <a class="card-link text-primary"  href="#"> <i class="far fa-thumbs-up"></i>10 likes</a>
-                    <a class="card-link text-dark"  href="#"> <i class="far fa-comments"></i> </a>
-                    <a class="card-link text-dark"  href="#">  <i class="fas fa-share-alt"></i> </i> </a>
-                </div>
-
-                {% endif %}
+              
         </div>
 {% endif %}
 

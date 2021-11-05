@@ -53,11 +53,9 @@
                         <p class="card-text"> {{ post.content }}</p>
                         <p class="card-text"><small class="text-muted">On {{ post.published | date('d M  Y') }} </small></p>
                         </div>
-                        {% if post.user == app.user %}
                     
-                            {% include "blog/components/postActions.html.twig" %}     
+                         {% include "blog/components/postActions.html.twig" %}     
 
-                        {% endif %}
                     </div>
                 </div>
             </div>

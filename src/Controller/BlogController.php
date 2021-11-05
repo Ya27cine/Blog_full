@@ -2,7 +2,9 @@
  namespace App\Controller;
 
 use App\Entity\Post;
+use App\Entity\Postlike;
 use App\Form\PostType;
+use App\Repository\PostlikeRepository;
 use App\Service\BlogService;
 use App\Service\FileUploaderService;
 use App\Service\UserService;
@@ -249,6 +251,53 @@ class BlogController extends AbstractController
              'user' => $user,
              'post_id' => $post->getId()
          ]);
+      }
+
+
+      /**
+       * @Route("/blog/{id}/like" , name="post-like", requirements={ "id" = "\d+" }, methods={"GET","POST"})
+       */
+      public function makeLike(Post $post, PostlikeRepository $postlikeRepository, UserService $userService, EntityManagerInterface $em): Response{
+
+        $user  = $userService->isAuth();
+        if(! $user)
+            return $this->json([
+                'code' => 403,
+                'message' => "non autorise"
+            ], 403);
+        
+            if($post->islikebyUser($user)){
+
+                $like = $postlikeRepository->findOneBy([
+                    'post' => $post,
+                    'user' => $user
+                ]);
+                $em->remove($like);           
+                $em->flush();
+
+                return $this->json([
+                    'code' => 200,
+                    'message' => "like is deleted",
+                    'likes' => $postlikeRepository->count(['post'=> $post]),
+                    'post' => $post->getId()
+                ], 200);
+
+            }else{
+
+                $like = new Postlike();
+                $like->setPost($post)
+                     ->setUser($user);
+                $em->persist($like);
+                $em->flush();
+
+                return $this->json([
+                    'code' => 200,
+                    'message' => "like is added",
+                    'likes' => $postlikeRepository->count(['post'=> $post]),
+                    'post' => $post->getId()
+                ], 200);
+
+            }
       }
 
 

@@ -165,4 +165,11 @@ class Post
 
         return $this;
     }
+
+    public function islikebyUser(User $user){
+        foreach ($this->getLikes() as  $like) 
+            if( $like->getUser() == $user) 
+                return true;
+        return false;
+    }
 }
