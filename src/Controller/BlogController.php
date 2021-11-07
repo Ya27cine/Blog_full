@@ -76,7 +76,7 @@ class BlogController extends AbstractController
       { 
         if( ! isset($post) ) // page 404
             return $this->redirectToRoute('blog-index');
-
+            
         return $this->render('blog/show.html.twig', [
              'post' => $post
          ]);

@@ -9,14 +9,14 @@ function onClickBtnLike(e){
 
         const icon =    document.querySelector("#icon-like"+reponse.data.post);
 
-        console.log(icon.classList)
+       // console.log(icon.classList)
 
         spanCournt.textContent = reponse.data.likes;
 
-        if(icon.classList.contains('fas')){
-            icon.classList.replace('fas', 'far')
+        if(icon.classList.contains("fa-thumbs-o-up")){
+            icon.classList.replace("fa-thumbs-o-up", "fa-thumbs-up")
         }else{
-            icon.classList.replace('far', 'fas')
+            icon.classList.replace("fa-thumbs-up", "fa-thumbs-o-up")
         }
     })
 }

@@ -1,17 +1,17 @@
     
 {% if post %}
-        {% set linkimg = 'assets/img/posts/p' ~ (post.id%11) ~ '.jpg'%}
+        {% set linkimg = 'assets/img/posts/p' ~ (post.id%11 + 1) ~ '.jpg'%}
 
         <div class="card" >
                 <img class="card-img-top" src="{{ asset(linkimg) }}" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title"> 
-                         <a class="text-primary" href="{{ path('blog-show', {'id': post.id})}}">
+                         <a class="text-primary" href="{{ path('blog-show', {'id': post.id }) }}#post">
                              {{ post.title | title }}
                         </a>
                     </h5>
                     <p class="card-text">{{ post.content | slice(0, 177) }}... 
-                        <a class="text-primary" href="{{ path('blog-show', {'id': post.id})}}">More</a></p>
+                        <a class="text-primary" href="{{ path('blog-show', {'id': post.id }) }}#post">More</a></p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">On {{ post.published | date('d M  Y') }}  </li>

@@ -30,7 +30,9 @@
         <div class="col-md-6">
             <ol class="breadcrumb">
                     <li><a class="text-primary" href="{{ path('blog-index')}}">Home</a>&nbsp;|&nbsp;</li>
-                    <li><a class="text-primary" href="{{ path('blog-my-posts')}}">My Posts</a>&nbsp;|&nbsp;</li>
+                    {% if app.user %}
+                         <li><a class="text-primary" href="{{ path('blog-my-posts')}}">My Posts</a>&nbsp;|&nbsp;</li>
+                    {% endif %}
                     <li><span class="text-dark active" > Show  Post ( {{ post.title }} )</span></li>
             </ol>
         </div>
@@ -43,15 +45,17 @@
 {% block body %}
 
         <!-- Post Content-->
-        <article class="my-4">
+        <article class="my-4" id="post">
             <div class="row">
                 <div class="col-md-10 mx-auto">
                     <div class="card mb-3">
+                         <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text"><small class="text-muted"> <i class="fa fa-calendar" aria-hidden="true"></i> On {{ post.published | date('d M  Y') }} </small></p>
+
                         <img class="card-img-top" src="{{ asset('uploads/posts/' ~ post.image ) }}" alt="Card image cap">
                         <div class="card-body">
                         <h5 class="card-title">{{ post.title }}</h5>
                         <p class="card-text"> {{ post.content }}</p>
-                        <p class="card-text"><small class="text-muted">On {{ post.published | date('d M  Y') }} </small></p>
                         </div>
                     
                          {% include "blog/components/postActions.html.twig" %}     
@@ -60,6 +64,10 @@
                 </div>
             </div>
         </article>
+
+        <div id="comments">
+            <h2>Comments</h2>
+        </div>
 
        
        
