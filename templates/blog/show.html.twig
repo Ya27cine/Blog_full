@@ -66,15 +66,36 @@
         </article>
 
         <div id="comments">
-            <h2>Comments</h2>
+            <div class="container">
+                <h2>Comments</h2>
 
-             <table class = "table">  
-                <tbody id="student"></tbody>  
-            </table>   
+                
+               {% for comment in post.comments | sort(  ) %}
+   
+                   <div class="row">
+                       <div class="col-md-9 mx-auto">
+                           <p>
+                               <i class="fa fa-user-circle" aria-hidden="true"></i>  <span class="text-primary"> {{ comment.author.username }} </span> 
+                               <span> 
+                                   &ensp; | &ensp; <i class="fa fa-clock-o" aria-hidden="true"></i>  On {{ comment.createdat | date('d M Y') }}
+                               </span> 
+                           </p>
+   
+                           <p>
+                               {{ comment.content }}
+                           </p>
+           
+               
+                           
+                       </div>
+                   </div>
+                  
+   
+                   <hr>
+               {% endfor %}
+
+            </div>
         </div>
 
-       
-       
-       
-       
+    
      {% endblock %}

@@ -14,7 +14,10 @@
                 <span class="link-like"> {{ post.likes | length }} </span>
                 </a>
 
-                <a class="card-link text-dark"  href="{{ path('blog-show', {'id': post.id}) }}#comments"> <i class="fa fa-comments-o"></i> </a>
+                <a class="card-link text-dark"  href="{{ path('blog-show', {'id': post.id}) }}#comments">
+                         <i class="fa fa-comments-o"></i>
+                          <span > {{ post.comments | length }} </span>
+                 </a>
                 <a class="card-link text-dark"  href="#">  <i class="fa fa-share"></i> </i> </a>
             </div>
             {% if  post.user == app.user %}
