@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -15,6 +16,7 @@ class AppFixtures extends Fixture
     private $faker;
     private $passwordEncoder;
     private const ROWS_POST = 17;
+    private const ROWS_COMMENT = 4;
     private const ROWS_USER = 5;
 
     function __construct(UserPasswordEncoderInterface $userPasswordEncoderInterface)
@@ -59,17 +61,29 @@ class AppFixtures extends Fixture
 
                 $manager->persist($user);
                  // Create Posts :
-                for ($i=0; $i < self::ROWS_POST; $i++) { 
+                for ($i=0; $i < rand(1, self::ROWS_POST); $i++) { 
                     $post = new Post();
 
                     $post->setTitle( implode(" ",$this->faker->words()) );
-                    $post->setContent(  implode(" ",$this->faker->words(1000)) );
+                    $post->setContent(  implode(" ",$this->faker->words(700)) );
                     $post->setPublished( $this->faker->dateTimeBetween("-100 days") );
                     $post->setCategory( $n_category );
+                    $post->setImage('6182fa127f10d.jpeg');
                     $post->setUser($user);
 
                     $manager->persist($post);
+                        // Create Comments :
+                        for ($k=0; $k < rand(0,5); $k++) { 
+                            $comment = new Comment;
 
+                            $comment->setContent(  implode(" ",$this->faker->words(100)) );
+                            $date_post = $post->getPublished()->format('d');
+                            $comment->setCreatedAt( $this->faker->dateTimeBetween("-".$date_post." days") );
+                            $comment->setPost( $post );
+                            $comment->setAuthor($user);
+
+                            $manager->persist($comment);              
+                        }// end: comment
                 }// end: post
             }// end: user
        }// end: category
