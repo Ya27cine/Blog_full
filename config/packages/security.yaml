@@ -37,4 +37,4 @@ security:
     access_control:
           - { path: ^/blog/my-posts, roles: [ROLE_USER] }
           - { path: ^/blog/create, roles: [ROLE_USER, ROLE_ADMIN] }
-          - { path: ^/admin, roles: ROLE_ADMIN }
+          - { path: ^/admin, roles: [ROLE_USER, ROLE_ADMIN]  }
