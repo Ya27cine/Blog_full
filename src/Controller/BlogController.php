@@ -1,8 +1,10 @@
 <?php 
  namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\Postlike;
+use App\Form\CommentType;
 use App\Form\PostType;
 use App\Repository\PostlikeRepository;
 use App\Service\BlogService;
@@ -72,13 +74,37 @@ class BlogController extends AbstractController
       /**
       * @Route("/blog/post/{id}", name="blog-show", requirements={ "id" = "\d+" } )
       */
-      public function show(Post $post=null)
+      public function show(Post $post=null, Request $request, EntityManagerInterface $em, UserService $userService)
       { 
         if( ! isset($post) ) // page 404
             return $this->redirectToRoute('blog-index');
-            
+
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid() ){
+
+            // get User auth
+            $user = $userService->isAuth();
+            if(! $user )
+                 return $this->redirectToRoute('security_login');
+
+            $comment->setCreatedAt(new \DateTime() );
+            $comment->setAuthor( $user );
+            $comment->setPost( $post );
+            $em->persist($comment);
+
+            $em->flush();
+
+            return $this->redirectToRoute('blog-show', ['id' => $post->getId() ] );
+        }
+
+
         return $this->render('blog/show.html.twig', [
-             'post' => $post
+             'post' => $post,
+             'comment_form' => $form->createView()
          ]);
       }
 
