@@ -3,6 +3,7 @@
     namespace App\Service;
 
 use App\Entity\User;
+
 use App\Repository\PostRepository;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -92,6 +93,16 @@ class BlogService{
     
         public function countPosts(){
             return  count( $this->postRepository->findAll() );
+        }
+
+
+
+        // SELECT p.title, count(*) as occ  FROM `post` p ,`comment` c WHERE p.id = c.post_id GROUP BY p.title ORDER BY occ DESC LIMIT 7 
+        public function getIdpostsInteractiveByComments($limit =7){
+            return
+            $this->entityManager->createQuery("SELECT p.id, count(c.post) as occ FROM App\Entity\Post p, App\Entity\Comment c WHERE p.id = c.post GROUP BY p.id ORDER BY occ DESC")
+            ->setMaxResults($limit)
+            ->getResult();
         }
 
 

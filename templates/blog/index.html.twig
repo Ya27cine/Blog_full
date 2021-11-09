@@ -88,26 +88,16 @@
                             <div class="card my-3">
                                 <h5 class="card-header"> {{'the 7 more interactive' | title}}</h5>
                                     <ul class="list-group list-group-flush">
-                                    {% for K, category in categories %}
+                                    {% for K, post in posts_interactive %}
                                             <li class="list-group-item"> 
                                                 {% set linkimg = 'assets/img/posts/p' ~ (K%11+1) ~ '.jpg'%}
                                                 <img src="{{ asset(linkimg) }}" class="img-fluid" alt="" width="20%">
-                                                <a href="?category={{ category.name  }}">
-                                                 {{ category.name }}  
+                                                <a href="#">
+                                                 {{ post.id }}  ref : {{ post.occ }}
                                                   
                                                 </a>
                                             </li>
-                                    {% endfor %}
-                                    {% for K, category in categories %}
-                                            <li class="list-group-item"> 
-                                                {% set linkimg = 'assets/img/posts/p' ~ (K%11+1) ~ '.jpg'%}
-                                                <img src="{{ asset(linkimg) }}" class="img-fluid" alt="" width="20%">
-                                                <a href="?category={{ category.name  }}">
-                                                 {{ category.name }}  
-                                                  
-                                                </a>
-                                            </li>
-                                    {% endfor %}
+                                    {% endfor %}                               
                                     </ul>
                              </div>
                         </div>

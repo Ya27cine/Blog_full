@@ -53,6 +53,7 @@ class BlogController extends AbstractController
             7
         );
 
+
         // set Template paginator_posts
         $paginator_posts->setTemplate('pagination/bootstrap_v5_pagination.html.twig');
          
@@ -62,10 +63,16 @@ class BlogController extends AbstractController
         // count the number of articles in all categories :
         $post_sum = $blogService->countPosts();
 
+
+        // Get list Posts Interactive (have more Comments ..)
+        $posts_inter =  $blogService->getIdpostsInteractiveByComments();
+
+
         return $this->render('blog/index.html.twig', [
             'posts' => $paginator_posts,
             'categories' => $categories,
             'posts_sum' => $post_sum,
+            'posts_interactive' => $posts_inter
         ]);
      }
 
