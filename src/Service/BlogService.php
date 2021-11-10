@@ -100,7 +100,7 @@ class BlogService{
         // SELECT p.title, count(*) as occ  FROM `post` p ,`comment` c WHERE p.id = c.post_id GROUP BY p.title ORDER BY occ DESC LIMIT 7 
         public function getIdpostsInteractiveByComments($limit =7){
             return
-            $this->entityManager->createQuery("SELECT p.id, p.title, count(c.post) as occ FROM App\Entity\Post p, App\Entity\Comment c WHERE p.id = c.post GROUP BY p.id, p.title ORDER BY occ DESC")
+            $this->entityManager->createQuery("SELECT p.id, p.title, p.image , count(c.post) as occ FROM App\Entity\Post p, App\Entity\Comment c WHERE p.id = c.post GROUP BY p.id, p.image, p.title ORDER BY occ DESC")
             ->setMaxResults($limit)
             ->getResult();
         }

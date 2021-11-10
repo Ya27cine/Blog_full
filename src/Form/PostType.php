@@ -32,8 +32,7 @@ class PostType extends AbstractType
             ->add("create", SubmitType::class, ['label' => "New Post"])
             ->add('image', FileType::class, [
                 'label' => 'Brochure (Image file)',
-                'required' => true,
-                'mapped' => false,
+                'required' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '8024k',

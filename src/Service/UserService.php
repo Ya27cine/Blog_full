@@ -29,7 +29,7 @@ class UserService{
            //  check if u can edit this post ?
         public function canIedit($post): bool{
             $author_post = $this->em->getRepository(Post::class)->find($post->getId());
-            return $author_post->getUser() != $this->user;
+            return $author_post->getUser() == $this->user;
         }
     }
 

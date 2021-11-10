@@ -1,31 +1,33 @@
     
 {% if post %}
-        {% set linkimg = 'assets/img/posts/p' ~ (post.id%11 + 1) ~ '.jpg'%}
+        {% set linkimg = 'uploads/posts/' ~ (post.image)%}
 
         <div class="card" >
                 <img class="card-img-top" src="{{ asset(linkimg) }}" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title"> 
-                         <a class="text-primary" href="{{ path('blog-show', {'id': post.id }) }}#post">
+                         <a class="text-primary" href="{{ path('blog-show', {'id': post.id }) }}">
                              {{ post.title | title }}
                         </a>
                     </h5>
-                    <p class="card-text">{{ post.content | slice(0, 177) | raw }}... 
-                        <a class="text-primary" href="{{ path('blog-show', {'id': post.id }) }}#post">More</a></p>
+                    <p class="card-text">{{ post.content | slice(0, 127) | raw }}...<a class="text-primary" href="{{ path('blog-show', {'id': post.id }) }}">More</a> </p>
+                    
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">On {{ post.published | date('d M  Y') }}  </li>
                     <li class="list-group-item">
+                          
+                        <i class="fa fa-user-circle" aria-hidden="true"></i>
                          <span class="badge badge-primary">
-                             Auther: {{ post.user.username}}
+                             {{ post.user.username}}
                          </span>
+                            &nbsp; &nbsp; | &nbsp; &nbsp;
+                        <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                         {{ post.published | date('d M  Y') }}  </li>
                     </li>
                 </ul>
                     
                 <!-- Show Action , {like, comment, share .... edit, delete }-->
-                {% include "blog/components/postActions.html.twig" %}     
-
-              
+                {% include "blog/components/postActions.html.twig" %}             
         </div>
 {% endif %}
 

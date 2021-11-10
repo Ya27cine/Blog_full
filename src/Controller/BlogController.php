@@ -209,6 +209,8 @@ class BlogController extends AbstractController
             if($imageFile){
                 $newFilename = $fileUploaderService->upload($imageFile);
                 $post->setImage($newFilename);
+            }else{
+                $post->setImage('default-img.jpg');
             }
             //====================
 
@@ -241,24 +243,25 @@ class BlogController extends AbstractController
              return $this->redirectToRoute('blog-index');
 
         //  check if u can edit this post ?
-        if( $userService->canIedit( $post )) // page 404
+        if( ! $userService->canIedit( $post )) // page 404
                 return $this->redirectToRoute('blog-index');
 
         // if user not update image, we will again save same name    
         $copy_nameFile = $post->getImage();
 
-        // Put image on $form :   
+        // we must transform the image string from Db  to File to respect the form types   
         try {
-            $copy_file =  $fileUploaderService->getFileImage( $post->getImage() );
-            $post->setImage($copy_file);
+            $old_file =  $fileUploaderService->getFileImage( $post->getImage() );
+            $post->setImage($old_file);
 
         } catch (\Throwable $th) {
            // $post->setImage(  );
         }
 
         $form = $this->createForm(PostType::class, $post);
-        
+
         $form->handleRequest( $request );
+
         if( $form->isSubmitted() && $form->isValid()){
 
             //====== Upload Image : =============

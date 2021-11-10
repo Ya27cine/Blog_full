@@ -25,12 +25,9 @@
           <!-- Main Content-->
         <div class="container  my-2">
             <div class="row">
-
-
-            {% if posts  %}
+            {% if posts_sum > 0  %}
                     <h1> List Posts </h1>
-                        <div class="col-md-3 my-3">
-                            
+                        <div class="col-md-3">                         
                             <div class="card">
                                 <h5 class="card-header"><i class="fa fa-list"></i>
                                             Categories</h5>
@@ -48,24 +45,6 @@
                                              {% include "blog/components/categories.html.twig" %}
                                     </ul>
                             </div>
-
-                            {% for c in categories %}                   
-                                <div class="card my-3">
-                                    <h5 class="card-header"> {{ ('last 5 articles of ' ~ c.name) | title }}</h5>
-                                        <ul class="list-group list-group-flush">
-                                        {% for K, category in categories %}
-                                                <li class="list-group-item"> 
-                                                    {% set linkimg = 'assets/img/posts/p' ~ (K%11+1) ~ '.jpg'%}
-                                                    <img src="{{ asset(linkimg) }}" class="img-fluid" alt="" width="20%">
-                                                    <a href="?category={{ category.name  }}">
-                                                    {{ category.name }}  
-                                                    
-                                                    </a>
-                                                </li>
-                                        {% endfor %}
-                                        </ul>
-                                </div>
-                            {% endfor %}
                           
                         </div>
                         <div class="col-md-6">
@@ -84,47 +63,52 @@
                             </nav>
                         </div>
 
+                {% if posts_interactive | length > 0 %}
                         <div class="col-md-3">
-                            <div class="card my-3">
-                                <h5 class="card-header"> {{'the 7 more interactive' | title}}</h5>
+                            <div class="card">
+                                <h5 class="card-header"> 
+                                    <i class="fa fa-comments-o" aria-hidden="true"></i>
+                                    {{'the more interactive' | title}}</h5>
                                     <ul class="list-group list-group-flush">
+                                    
                                     {% for K, post in posts_interactive %}
                                             <li class="list-group-item"> 
-                                                {% set linkimg = 'assets/img/posts/p' ~ (K%11+1) ~ '.jpg'%}
+                                                {% set linkimg = 'uploads/posts/' ~  post.image %}
                                                 <img src="{{ asset(linkimg) }}" class="img-fluid" alt="" width="20%">
                                                 <a href="{{ path('blog-show', {'id': post.id}) }}">
-                                                
-                                                 {{ post.title }} 
-                                                 
-                                                    <br /> 
-                                                 <i class="fa fa-comments-o"></i> {{ post.occ }}
-                                                  
+                                                    {{ post.title | slice(0,22) }} 
                                                 </a>
+                                                <br /> 
+                                                <i class="fa fa-comments-o"></i> {{ post.occ }}
+                                                                                              
                                             </li>
                                     {% endfor %}                               
                                     </ul>
-                             </div>
+                            </div>
                         </div>
+                {% endif %}
             {% else %}
-                 <h3> there are no articles !!</h3>
-                 <div>
-                    <p>
-                      We invited to create an article
-                        <a href="{{ path('blog-create')}}"> New Article </a>
-                    </p>
-                 </div>
+
+            <div class="container-md">
+                <div class="row  my-4">
+                    <div class="col-md-6  mx-auto">
+                        <h1> {{'there are no articles' | title}} !</h1>
+                        <div>
+                            <p>
+                                We invited to create an article 
+                                <a href="{{ path('blog-create')}}"> 
+                                    <span class="badge badge-primary"> New Article </span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
                 
             {% endif %}
             </div>
         </div>
         
-   <a id="loadstudent" href="#student">Load student information</a>  
-   </br> 
-   </br>  
-   
-   <table class = "table">  
-      <tbody id="student"></tbody>  
-   </table>   
 
 {% endblock %}
 
