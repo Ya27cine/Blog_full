@@ -10,7 +10,7 @@
                              {{ post.title | title }}
                         </a>
                     </h5>
-                    <p class="card-text">{{ post.content | slice(0, 177) }}... 
+                    <p class="card-text">{{ post.content | slice(0, 177) | raw }}... 
                         <a class="text-primary" href="{{ path('blog-show', {'id': post.id }) }}#post">More</a></p>
                 </div>
                 <ul class="list-group list-group-flush">

@@ -53,6 +53,7 @@ class BlogController extends AbstractController
             7
         );
 
+
         // set Template paginator_posts
         $paginator_posts->setTemplate('pagination/bootstrap_v5_pagination.html.twig');
          
@@ -62,10 +63,16 @@ class BlogController extends AbstractController
         // count the number of articles in all categories :
         $post_sum = $blogService->countPosts();
 
+
+        // Get list Posts Interactive (have more Comments ..)
+        $posts_inter =  $blogService->getIdpostsInteractiveByComments();
+
+
         return $this->render('blog/index.html.twig', [
             'posts' => $paginator_posts,
             'categories' => $categories,
             'posts_sum' => $post_sum,
+            'posts_interactive' => $posts_inter
         ]);
      }
 
@@ -130,9 +137,9 @@ class BlogController extends AbstractController
 
 
     /**
-      * @Route("/blog/my-posts", name="blog-my-posts")
+      * @Route("/blog/profil", name="blog-my-posts")
       */
-      public function myposts(PaginatorInterface $paginator, Request $request, BlogService $blogService, UserService $userService)
+      public function profil(PaginatorInterface $paginator, Request $request, BlogService $blogService, UserService $userService)
       {
         try{
             // get User auth
@@ -168,7 +175,7 @@ class BlogController extends AbstractController
              die($th);
         }
  
-         return $this->render('blog/my-list.html.twig', [
+         return $this->render('blog/profil.html.twig', [
              'posts' => $paginator_my_posts,
              'categories' => $occ_my_post_by_categ,
              'count_my_posts' => $count_my_posts,

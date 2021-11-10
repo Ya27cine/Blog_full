@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Category;
 use App\Entity\Post;
 use Doctrine\DBAL\Types\TextType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -21,7 +22,7 @@ class PostType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('content', TextareaType::class)
+            ->add('content', CKEditorType::class)
             //->add('published', DateType::class)
            // ->add('user')
             ->add('category', EntityType::class, [
@@ -31,7 +32,7 @@ class PostType extends AbstractType
             ->add("create", SubmitType::class, ['label' => "New Post"])
             ->add('image', FileType::class, [
                 'label' => 'Brochure (Image file)',
-                'required' => false,
+                'required' => true,
                 'mapped' => false,
                 'constraints' => [
                     new File([
