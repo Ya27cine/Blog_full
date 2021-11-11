@@ -106,5 +106,14 @@ class BlogService{
         }
 
 
+         //  
+         public function getIdpostsInteractiveByLikes($limit =7){
+            return
+            $this->entityManager->createQuery("SELECT p.id, p.title, p.image , count(pl.post) as occ FROM App\Entity\Post p, App\Entity\Postlike pl WHERE p.id = pl.post GROUP BY p.id, p.image, p.title ORDER BY occ DESC")
+            ->setMaxResults($limit)
+            ->getResult();
+        }
+
+
     }
 ?>

@@ -1,50 +1,21 @@
 {% extends "base.html.twig" %} 
 
-{% block header %}
-     <!-- Page Header
-        <header class="masthead" style="background-image: url('assets/img/home-bg.jpg')">
-            <div class="container position-relative px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <div class="site-heading">
-                            <h1>Clean Blog</h1>
-                            <span class="subheading">A Blog Theme by Start PROSTAM</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>-->
-{% endblock %}
-
-
-
 {% block body %}
     
         <!-- Main Content-->
         <div class="container  my-2">
             <div class="row">
             {% if posts_sum > 0  %}
-                    <h1> List Posts </h1>
-                        <div class="col-md-3">                         
-                            <div class="card">
-                                <h5 class="card-header"><i class="fa fa-list"></i>
-                                            Categories</h5>
-                                    <ul class="list-group list-group-flush">
 
-                                        <li class="list-group-item"> 
-                                            <a href="{{ path('blog-index') }}">
-                                             {{ 'All' }}  
-                                             <span class="badge badge-info">
-                                                 {{ posts_sum }}
-                                             </span>
-                                            </a>
-                                        </li>
-                                        <!--  Show List categories :  -->
-                                             {% include "blog/components/categories.html.twig" %}
-                                    </ul>
-                            </div>
-                          
+                    <h1> List Posts </h1>
+                     <!-- section left -->  
+                        <div class="col-md-3"> 
+                            {% include "blog/sections/section_categories.html.twig" %}   
+
+                            {% include "blog/sections/section_mostliked.html.twig" %}                                                                              
                         </div>
+
+                        <!-- section center  --> 
                         <div class="col-md-6">
                                 {% for post in posts  %}
                                     <!-- Post preview-->
@@ -61,30 +32,15 @@
                             </nav>
                         </div>
 
-                {% if posts_interactive | length > 0 %}
+                       <!-- section rigth  -->
+                        
                         <div class="col-md-3">
-                            <div class="card">
-                                <h5 class="card-header"> 
-                                    <i class="fa fa-comments-o" aria-hidden="true"></i>
-                                    {{'the more interactive' | title}}</h5>
-                                    <ul class="list-group list-group-flush">
-                                    
-                                    {% for K, post in posts_interactive %}
-                                            <li class="list-group-item"> 
-                                                {% set linkimg = 'uploads/posts/' ~  post.image %}
-                                                <img src="{{ asset(linkimg) }}" class="img-fluid" alt="" width="20%">
-                                                <a href="{{ path('blog-show', {'id': post.id}) }}">
-                                                    {{ post.title | slice(0,22) }} 
-                                                </a>
-                                                <br /> 
-                                                <i class="fa fa-comments-o"></i> {{ post.occ }}
-                                                                                              
-                                            </li>
-                                    {% endfor %}                               
-                                    </ul>
-                            </div>
+                            {% if posts_most_comments | length > 0 %}
+                                    {% include "blog/sections/section_mostComment.html.twig" %}    
+                            {% endif %}
                         </div>
-                {% endif %}
+                       
+
             {% else %}
 
             <div class="container-md">
