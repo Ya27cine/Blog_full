@@ -4,9 +4,9 @@
     {% if count_my_posts > 0  %}
         <div class="container">
             <div class="row mt-2">
-                <div class="col-md-6">
-                    <ol class="breadcrumb">
-                            <li><a class="text-primary" href="{{ path('blog-index')}}">Home</a>&nbsp;|&nbsp;</li>
+                <div class="col-md-12">
+                    <ol class="breadcrumb p-2">
+                            <li><a class="text-primary ml-2" href="{{ path('blog-index')}}">Home</a>&nbsp;|&nbsp;</li>
                             <li><span class="text-dark active" > My Posts </span></li>
                     </ol>
                 </div>
@@ -23,11 +23,10 @@
           <!-- Main Content-->
         <div class="container">
             <div class="row">
-
             {% if count_my_posts > 0  %}
-                    <h2> My List Posts </h2>
-
-                    <div class="col-md-3 my-3 mx-3">          
+                
+                <div class="col-md-3 my-3">  
+                    <h2> My List Posts </h2>        
                             <div class="card">
                                 <h5 class="card-header"><i class="fa fa-list"></i>
                                             Categories</h5>
@@ -47,7 +46,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-8">
+                        <div class="col-md-9">
                                 {% for post in posts %}
                                     <!-- Post preview-->
                                        

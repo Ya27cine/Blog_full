@@ -1,35 +1,11 @@
 {% extends "base.html.twig" %} 
 
 
-{% block header %}
-    
-    <!-- Page Header
-        <header class="masthead" style="background-image: url('assets/img/post-bg.jpg')">
-            <div class="container position-relative px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <div class="post-heading">
-                            <h1>New Post</h1>
-                            <h2 class="subheading"></h2>
-                            <span class="meta">
-                                Posted by
-                                <a href="#!">Start Bootstrap</a>
-                                    on {{ "now" | date("F jS \\a\\t g:ia") }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        -->
-{% endblock %}
-
-
 {% block breadcrumb %}
  <div class="container">
     <div class="row mt-2">
-        <div class="col-md-6">
-            <ol class="breadcrumb">
+        <div class="col-md-10">
+            <ol class="breadcrumb p-3">
                     <li><a class="text-primary" href="{{ path('blog-index')}}">Home</a>&nbsp;|&nbsp;</li>
                     <li><a class="text-primary" href="{{ path('blog-my-posts')}}">My Posts</a>&nbsp;|&nbsp;</li>
                     <li><span class="text-dark active" > new Post </span></li>
@@ -45,10 +21,10 @@
 {% block body %}
 
         <!-- Post Content-->
-        <article class="mb-4">
-            <div class="container px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
+        <article class="my-2">
+            <div class="container">
+                <div class="row ">
+                    <div class="col-md-10 ">
                         <h3 class="my-2">New Post</h3>
 
                         {{ form_start( mForm ) }}
