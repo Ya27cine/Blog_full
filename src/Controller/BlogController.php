@@ -65,14 +65,19 @@ class BlogController extends AbstractController
 
 
         // Get list Posts Interactive (have more Comments ..)
-        $posts_inter =  $blogService->getIdpostsInteractiveByComments();
+        $posts_most_comments =  $blogService->getIdpostsInteractiveByComments();
+
+        // Get list Posts Interactive (have more likes ..)
+        $posts_most_likes =  $blogService->getIdpostsInteractiveByLikes();
 
 
         return $this->render('blog/index.html.twig', [
             'posts' => $paginator_posts,
             'categories' => $categories,
             'posts_sum' => $post_sum,
-            'posts_interactive' => $posts_inter
+            'posts_most_comments' => $posts_most_comments,
+            'posts_most_likes' => $posts_most_likes
+
         ]);
      }
 
