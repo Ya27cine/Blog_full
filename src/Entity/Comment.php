@@ -29,7 +29,7 @@ class Comment
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
-     */
+     */c
     private $author;
 
     /**

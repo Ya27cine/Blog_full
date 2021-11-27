@@ -10,6 +10,7 @@ use App\Repository\PostlikeRepository;
 use App\Service\BlogService;
 use App\Service\FileUploaderService;
 use App\Service\UserService;
+use Share;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -366,6 +367,15 @@ class BlogController extends AbstractController
             } else { 
                 return $this->json(['null']);
             } 
+      }
+
+
+      /**
+       * @Route("/blog/share" , name="post-share")
+       */
+      public function makeShare( ){
+
+            return Share::load( url('http://www.example.com'), 'My example')->twitter();
       }
 
  }
