@@ -1,70 +1,68 @@
 {% extends "base.html.twig" %}
 
 
-
 {% block header %}
 
- <!-- Page Header 
-        <header class="masthead" style="background-image: url('assets/img/post-bg.jpg'); height: 5%;">
-            <div class="container position-relative">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <div class="post-heading">
-                            <h1> ..</h1>
-                            <h2 class="subheading">
-                                     Home | {{ 'Login' | title }}
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header> -->
-        
+	<!-- Page Header 
+			        <header class="masthead" style="background-image: url('assets/img/post-bg.jpg'); height: 5%;">
+			            <div class="container position-relative">
+			                <div class="row gx-4 gx-lg-5 justify-content-center">
+			                    <div class="col-md-10 col-lg-8 col-xl-7">
+			                        <div class="post-heading">
+			                            <h1> ..</h1>
+			                            <h2 class="subheading">
+			                                     Home | {{ 'Login' | title }}
+			                            </h2>
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>
+			        </header> -->
+
 {% endblock %}
 
 {% block body %}
 
 
-{% if app.user %}
-   {{ path("blog-index") }}
-{% endif %}
+	{% if app.user %}
+		{{ path("blog-index") }}
+	{% endif %}
 
-    <div class="row mx-auto my-5">
-  
-        <div class="col-md-6 mx-auto">
-            <h2 class="subheading">
-                {{ 'Login' | title }}
-            </h2>
-                <form action="{{ path('security_login')}}" method="post">
+	<div class="row mx-auto my-5">
 
-                    <div class="form-group">
-                        <label for="_username">Email Address *</label>
-                        <input class="form-control" type="text" placeholder="demo@example.com" name="_username" id="_username" required>
-                        </input>
-                    </div>
+		<div class="col-md-6 mx-auto">
+			<h2 class="subheading">
+				{{ 'Login' | title }}
+			</h2>
+			<form action="{{ path('security_login')}}" method="post">
 
-                    <div class="form-group my-2">
-                        <label for="_username"> Password * </label>
-                        <input class="form-control" type="password" placeholder="************" name="_password" required>
-                        </input>
-                    </div>
-                   
-                    <div class="row my-3">
-                        <div class="col-md-3">
-                            <button class="btn btn-primary btn-block" type="submit">Login !</button>
-                        </div>
-                        <div class="col-md-9">
-                            <p class="text-sm-right">
-                                Don't you have an account ? <a class="text-primary" href="{{path('security_registration')}}">Click here</a> to Signup
-                            </p>
-                        </div>
-                    </div>
-                    
+				<div class="form-group">
+					<label for="_username">Email Address *</label>
+					<input class="form-control" type="text" placeholder="demo@example.com" name="_username" id="_username" required>
+				</input>
+			</div>
+
+			<div class="form-group my-2">
+				<label for="_username">
+					Password *
+				</label>
+				<input class="form-control" type="password" placeholder="************" name="_password" required>
+			</input>
+		</div>
+
+		<div class="row my-3">
+			<div class="col-md-3">
+				<button class="btn btn-primary btn-block" type="submit">Login !</button>
+			</div>
+			<div class="col-md-9">
+				<p class="text-sm-right">
+					Don't you have an account ?
+					<a class="text-primary" href="{{path('security_registration')}}">Click here</a>
+					to Signup
+				</p>
+			</div>
+		</div>
 
 
-                </form>
-        </div>
-    </div>
-    
-
-{% endblock %}
+	</form>
+</div></div>{% endblock %}

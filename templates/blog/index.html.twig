@@ -1,73 +1,78 @@
-{% extends "base.html.twig" %} 
+{% extends "base.html.twig" %}
 
 {% block body %}
-    
-        <!-- Main Content-->
-        <div class="container  my-2">
-            <div class="row">
-            {% if posts_sum > 0  %}
 
-                    <h1> List Posts </h1>
-                     <!-- section left -->  
-                        <div class="col-md-3"> 
-                            {% include "blog/sections/section_categories.html.twig" %}   
+	<!-- Main Content-->
+	<div class="container  my-2">
+		<div class="row">
+			{% if posts_sum > 0  %}
 
-                            {% include "blog/sections/section_mostliked.html.twig" %}                                                                              
-                        </div>
+				<h1>
+					List Posts
+				</h1>
+				<!-- section left -->
+				<div class="col-md-3">
+					{% include "blog/shared/_categories.html.twig" %}
 
-                        <!-- section center  --> 
-                        <div class="col-md-6">
-                                {% for post in posts  %}
-                                    <!-- Post preview-->
-                                    
-                                    {% include "blog/components/post.html.twig" %}
-                                        
-                                     <!-- Divider-->
-                                    <hr class="my-4" />
-                                {% endfor %}
-                            
-                            <!-- <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>  -->
-                            <nav aria-label="Page navigation">
-                                    {{  knp_pagination_render(posts) }}
-                            </nav>
-                        </div>
+					{% include "blog/shared/_mostliked.html.twig" %}
+				</div>
 
-                       <!-- section rigth  -->
-                        
-                        <div class="col-md-3">
-                            {% if posts_most_comments | length > 0 %}
-                                    {% include "blog/sections/section_mostComment.html.twig" %}    
-                            {% endif %}
-                        </div>
-                       
+				<!-- section center  -->
+				<div class="col-md-6">
+					{% for post in posts  %}
+						<!-- Post preview-->
 
-            {% else %}
+						{% include "blog/components/post.html.twig" %}
 
-            <div class="container-md">
-                <div class="row  my-4">
-                    <div class="col-md-6  mx-auto">
-                        <h1> {{'there are no articles' | title}} !</h1>
-                        <div>
-                            <p>
-                                We invited to create an article 
-                                <a href="{{ path('blog-create')}}"> 
-                                    <span class="badge badge-primary"> New Article </span>
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                
-            {% endif %}
-            </div>
-        </div>
-        
+						<!-- Divider-->
+						<hr class="my-4"/>
+					{% endfor %}
+
+					<!-- <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>  -->
+					<nav aria-label="Page navigation">
+						{{  knp_pagination_render(posts) }}
+					</nav>
+				</div>
+
+				<!-- section rigth  -->
+
+				<div class="col-md-3">
+					{% if posts_most_comments | length > 0 %}
+						{% include "blog/shared/_mostComment.html.twig" %}
+					{% endif %}
+				</div>
+
+
+			{% else %}
+
+				<div class="container-md">
+					<div class="row  my-4">
+						<div class="col-md-6  mx-auto">
+							<h1>
+								{{'there are no articles' | title}}
+								!</h1>
+							<div>
+								<p>
+									We invited to create an article
+									<a href="{{ path('blog-create')}}">
+										<span class="badge badge-primary">
+											New Article
+										</span>
+									</a>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			{% endif %}
+		</div>
+	</div>
+
 
 {% endblock %}
 
 
-
 {% block javascripts %}
-   <script src="{{ asset('js/blog/getPosts.js') }}"> </script>
+	<script src="{{ asset('js/blog/getPosts.js') }}"></script>
 {% endblock %}

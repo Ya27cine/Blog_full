@@ -1,39 +1,38 @@
+<div class="card-body">
+	<div class="row">
+		<div class="col-md-9">
 
+			<a class="card-link text-primary link-like" href="{{ path('post-like',{id: post.id}) }}">
+				{% if app.user and  post.islikebyuser(app.user) %}
+					<i id="{{ 'icon-like' ~ post.id }}" class="fa fa-thumbs-up"></i>
+				{% else %}
+					<i id="{{ 'icon-like' ~ post.id }}" class="fa fa-thumbs-o-up"></i>
+				{% endif %}
 
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-9"> 
+				<span class="link-like">
+					{{ post.likes | length }}
+				</span>
+			</a>
 
-                <a class="card-link text-primary link-like"  href="{{ path('post-like',{id: post.id}) }}"> 
-                    {% if app.user and  post.islikebyuser(app.user) %}
-                        <i id="{{ 'icon-like' ~ post.id }}" class="fa fa-thumbs-up"></i>
-                    {% else %}
-                         <i id="{{ 'icon-like' ~ post.id }}" class="fa fa-thumbs-o-up"></i>
-                    {% endif %}
-                
-                <span class="link-like"> {{ post.likes | length }} </span>
-                </a>
-
-                <a class="card-link text-dark"  href="{{ path('blog-show', {'id': post.id}) }}#comments">
-                         <i class="fa fa-comments-o"></i>
-                          <span > {{ post.comments | length }} </span>
-                 </a>
-                <a class="card-link text-dark"  href="#">  <i class="fa fa-share"></i> </i> </a>
-            </div>
-            {% if  post.user == app.user %}
-                <div class="col-md-3 text-right">
-                    <a class="card-link text-danger"  href="{{ path('blog-delete',{id: post.id})}}"><i class="fa fa-trash"></i></a>
-                    <a class="card-link text-success" href="{{ path('blog-update',{id: post.id})}}"><i class="fa fa-edit"></i></a>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-
-
-
-
-
-
-
-
-    
+			<a class="card-link text-dark" href="{{ path('blog-show', {'id': post.id}) }}#comments">
+				<i class="fa fa-comments-o"></i>
+				<span>
+					{{ post.comments | length }}
+				</span>
+			</a>
+			<a class="card-link text-dark" href="#">
+				<i class="fa fa-share"></i>
+			</i>
+		</a>
+	</div>
+	{% if  post.user == app.user %}
+		<div class="col-md-3 text-right">
+			<a class="card-link text-danger" href="{{ path('blog-delete',{id: post.id})}}">
+				<i class="fa fa-trash"></i>
+			</a>
+			<a class="card-link text-success" href="{{ path('blog-update',{id: post.id})}}">
+				<i class="fa fa-edit"></i>
+			</a>
+		</div>
+	{% endif %}
+</div></div>

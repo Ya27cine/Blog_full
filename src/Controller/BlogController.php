@@ -25,16 +25,9 @@ class BlogController extends AbstractController
  {
     public function __construct(){}
 
-     /**
-      * @Route("/", name="blog-default")
-      */
-      public function toblog()
-      { 
-         return $this->redirectToRoute('blog-index');
-      }
 
      /**
-      * @Route("/blog", name="blog-index")
+      * @Route("/", name="blog-index")
       */
      public function index(PaginatorInterface $paginator, Request $request, BlogService $blogService)
      {
@@ -82,10 +75,8 @@ class BlogController extends AbstractController
         ]);
      }
 
-
-
       /**
-      * @Route("/blog/post/{id}", name="blog-show", requirements={ "id" = "\d+" } )
+      * @Route("/post/{id}", name="blog-show", requirements={ "id" = "\d+" } )
       */
       public function show(Post $post=null, Request $request, EntityManagerInterface $em, UserService $userService)
       { 
@@ -237,7 +228,7 @@ class BlogController extends AbstractController
 
 
       /**
-      * @Route("/blog/{id}/update", name="blog-update", requirements={ "id" = "\d+" })
+      * @Route("/blog/post/{id}/edit", name="blog-update", requirements={ "id" = "\d+" })
       */
       public function update(Post $post=null, Request $request, UserService $userService, EntityManagerInterface $em, FileUploaderService $fileUploaderService)  
       {
@@ -286,7 +277,7 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('blog-show', ['id' => $post->getId() ]);
         }
 
-         return $this->render('blog/update.html.twig', [
+         return $this->render('blog/edit.html.twig', [
              'data' => 'Update Post',
              'mForm' => $form->createView(),
              'image' => $copy_nameFile,
@@ -340,42 +331,6 @@ class BlogController extends AbstractController
                 ], 200);
 
             }
-      }
-
-
-
-
-      /**
-       * @Route("/prostam" , name="prostam-index", methods={"GET","POST"})
-       */
-      public function ajaxAction(Request $request){
-            $students = $this->getDoctrine() 
-                ->getRepository(Post::class) 
-                ->findAll();  
-                
-            if ($request->isXmlHttpRequest() || $request->query->get('showJson') == 1) {  
-                $jsonData = array();  
-                $idx = 0;  
-                foreach($students as $student) {  
-                $temp = array(
-                    'title' => $student->getTitle(),  
-                    'content' => $student->getContent(),  
-                );   
-                $jsonData[$idx++] = $temp;  
-                } 
-                return new JsonResponse($jsonData); 
-            } else { 
-                return $this->json(['null']);
-            } 
-      }
-
-
-      /**
-       * @Route("/blog/share" , name="post-share")
-       */
-      public function makeShare( ){
-
-            return Share::load( url('http://www.example.com'), 'My example')->twitter();
       }
 
  }
