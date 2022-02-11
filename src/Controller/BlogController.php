@@ -4,41 +4,24 @@
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\Postlike;
+use App\Event\CommentEvent;
+use App\Event\ConstantsEvent;
 use App\Form\CommentType;
 use App\Form\PostType;
 use App\Repository\PostlikeRepository;
 use App\Service\BlogService;
 use App\Service\FileUploaderService;
-use App\Service\MailerService;
 use App\Service\UserService;
-use Share;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 class BlogController extends AbstractController
  {
-    public function __construct(){}
-
-
-     /**
-      * @Route("/mail", name="blog-mail")
-      */
-      public function sendmail(MailerService $mailerService){
-
-        $mailerService->sendMailier();
-        return new Response("mail sent ");
-      }
-
-
 
      /**
       * @Route("/", name="blog-index")
@@ -89,13 +72,22 @@ class BlogController extends AbstractController
         ]);
      }
 
+
       /**
       * @Route("/post/{id}", name="blog-show", requirements={ "id" = "\d+" } )
       */
-      public function show(Post $post=null, Request $request, EntityManagerInterface $em, UserService $userService)
+      public function show(Post $post=null, Request $request, EntityManagerInterface $em, UserService $userService,
+      EventDispatcherInterface $dispatcher)
       { 
         if( ! isset($post) ) // page 404
             return $this->redirectToRoute('blog-index');
+
+         // get User auth
+         $user = $userService->isAuth();
+         if(! $user ){ // show only post , without form add comment
+            return $this->render('blog/show.html.twig', 
+            [ 'post' => $post, 'comment_form' => null]);
+         }
 
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
@@ -104,17 +96,21 @@ class BlogController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() ){
 
-            // get User auth
-            $user = $userService->isAuth();
-            if(! $user )
-                 return $this->redirectToRoute('security_login');
-
+            // Persist Comment :
             $comment->setCreatedAt(new \DateTime() );
             $comment->setAuthor( $user );
             $comment->setPost( $post );
             $em->persist($comment);
-
             $em->flush();
+
+            // send notif to write for this article:
+            // 1: check if there it is my article:
+            // if not my post, i will send email to writer  
+            if( $post->getUser()->getId() != $user->getId() )
+            {
+                $dispatcher->dispatch(new CommentEvent($comment, $post->getUser() ),
+                     ConstantsEvent::POST_NEW_COMMENT );
+            }
 
             return $this->redirectToRoute('blog-show', ['id' => $post->getId() ] );
         }

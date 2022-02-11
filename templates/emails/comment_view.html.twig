@@ -3,6 +3,7 @@
 
 {% block email_content %}
 
+
 	<div class="u-row-container" style="padding: 0px;background-color: transparent">
 		<div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
 			<div style="border-collapse: collapse;display: table;width: 100%;background-color: transparent;">
@@ -16,11 +17,23 @@
 							style="padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
 							<!--<![endif]-->
 
-							<h4 class="my-2">
-								Bonjour
-								{{ user.username }}
+							<h4>
+								{{ comment.author.username}}
+								a commente dans votre artile
 							</h4>
+							<table id="u_content_heading_3" style="font-family:'Montserrat',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+								<tbody>
+									<tr>
+										<td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 55px;font-family:'Montserrat',sans-serif;" align="left">
 
+											<h1 class="v-font-size" style="margin: 0px; line-height: 160%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 33px;">
+												<strong>{{ comment.post.title}}</strong>
+											</h1>
+
+										</td>
+									</tr>
+								</tbody>
+							</table>
 
 							<table id="u_content_text_3" style="font-family:'Montserrat',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
 								<tbody>
@@ -28,21 +41,27 @@
 										<td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 60px 50px;font-family:'Montserrat',sans-serif;" align="left">
 
 											<div style="color: #444444; line-height: 170%; text-align: center; word-wrap: break-word;">
-												<p>
-													Bienvenue sur
-													<strong>My Blog</strong>! Vous venez de creer votre profil.
+												<p style="font-size: 14px; line-height: 170%;">
+													<span style="font-size: 16px; line-height: 27.2px;"></br>
+													{{ comment.content }}
 												</p>
-											</br>
-											Nous vous conseillons de cree votre prenier article .
-											<a href="{{ new_article }}">new Article</a>
+												<p>
+													date :
+													{{ comment.createdAt | date("Y/m/d")}}</p>
+											</span>
 										</td>
 									</tr>
 								</tbody>
 							</p>
-						</span>
+						</div>
+
+
 					</td>
 				</tr>
 			</tbody>
-		</p>
+		</table>
+
+		<!--[if (!mso)&(!IE)]><!-->
 	</div>
-</td></tr></tbody></table><!--[if (!mso)&(!IE)]><!--></div>{% endblock %}
+
+{% endblock %}

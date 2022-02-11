@@ -1,0 +1,16 @@
+<div class="row">
+	<div class="col-md-10">
+
+		{{ form_start( comment_form ) }}
+
+		<div class="form-group">
+			<label for="content"></label>
+			{{ form_row( comment_form.content, { 'label': 'Add comment', 'attr': {'class': 'form-control', 'rows': '4'}}
+			)}}
+		</div>
+
+		{{ form_widget( comment_form.create, { 'attr': {'class': 'btn btn-primary btn-block'}}
+		)}}
+		{{ form_end( comment_form ) }}
+	</div>
+</div>

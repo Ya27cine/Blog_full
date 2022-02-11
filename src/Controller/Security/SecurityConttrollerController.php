@@ -50,15 +50,7 @@ class SecurityConttrollerController extends AbstractController
     /**
      * @Route("/login", name="security_login")
      */
-    public function login(EventDispatcherInterface $dispatcher){
-
-        $user = new User;
-        $user->setUsername("Khelifa Yassine")
-        ->setEmail("yaci@gmail.fr")
-        ;
-
-        $dispatcher->dispatch(new MembershipRegistrationEvent($user),
-        ConstantsEvent::USER_AFTER_REGISTRATION);
+    public function login(){
 
         return $this->render('security/login.html.twig');
     }

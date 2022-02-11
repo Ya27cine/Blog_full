@@ -1,93 +1,106 @@
-{% extends "base.html.twig" %} 
+{% extends "base.html.twig" %}
 
-    
+
 {% block breadcrumb %}
- <div class="container">
-    <div class="row mt-2">
-        <div class="col-md-10">
-            <ol class="breadcrumb p-3">
-                    <li><a class="text-primary" href="{{ path('blog-index')}}">Home</a>&nbsp;|&nbsp;</li>
-                    {% if app.user %}
-                         <li><a class="text-primary" href="{{ path('blog-my-posts')}}">My Posts</a>&nbsp;|&nbsp;</li>
-                    {% endif %}
-                    <li><span class="text-dark active" > Show  Post ( {{ post.title }} )</span></li>
-            </ol>
-        </div>
-        <div class="col-md-6"> </div>
-    </div>
- </div>
+	<div class="container">
+		<div class="row mt-2">
+			<div class="col-md-10">
+				<ol class="breadcrumb p-3">
+					<li>
+						<a class="text-primary" href="{{ path('blog-index')}}">Home</a>&nbsp;|&nbsp;</li>
+					{% if app.user %}
+						<li>
+							<a class="text-primary" href="{{ path('blog-my-posts')}}">My Posts</a>&nbsp;|&nbsp;</li>
+					{% endif %}
+					<li>
+						<span class="text-dark active">
+							Show  Post (
+							{{ post.title }}
+							)</span>
+					</li>
+				</ol>
+			</div>
+			<div class="col-md-6"></div>
+		</div>
+	</div>
 {% endblock %}
 
 
 {% block body %}
 
-        <!-- Post Content-->
-         <div class="container">
-            <article class="my-3" id="post">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <div class="card mb-3">
-                                <h5 class="card-title ml-3 mt-1">{{ post.title }}</h5>
-                                <p class="card-text ml-3"><small class="text-muted"> <i class="fa fa-calendar" aria-hidden="true"></i> On {{ post.published | date('d M  Y') }} </small></p>
+	<!-- Post Content-->
+	<div class="container">
+		<article class="my-3" id="post">
+			<div class="row">
+				<div class="col-md-10">
+					<div class="card mb-3">
+						<h5 class="card-title ml-3 mt-1">{{ post.title }}</h5>
+						<p class="card-text ml-3">
+							<small class="text-muted">
+								<i class="fa fa-calendar" aria-hidden="true"></i>
+								On
+								{{ post.published | date('d M  Y') }}
+							</small>
+						</p>
 
-                                <img class="card-img-top" src="{{ asset('uploads/posts/' ~ post.image ) }}" alt="Card image cap">
-                                <div class="card-body">
-                                <h5 class="card-title">{{ post.title }}</h5>
-                                <p class="card-text"> {{ post.content | raw }}</p>
-                                </div>
-                            
-                                {% include "blog/components/postActions.html.twig" %}     
+						<img class="card-img-top" src="{{ asset('uploads/posts/' ~ post.image ) }}" alt="Card image cap">
+						<div class="card-body">
+							<h5 class="card-title">{{ post.title }}</h5>
+							<p class="card-text">
+								{{ post.content | raw }}</p>
+						</div>
 
-                            </div>
-                        </div>
-                    </div>
-            </article>
-        </div>
+						{% include "blog/components/postActions.html.twig" %}
 
-        <div id="comments">
-            <div class="container">
+					</div>
+				</div>
+			</div>
+		</article>
+	</div>
 
-                <h2> <i class="fa fa-comments" ></i> Comments</h2>
+	<div id="comments">
+		<div class="container">
 
-                <div class="row">
-                       <div class="col-md-10">
+			<h2>
+				<i class="fa fa-comments"></i>
+				Comments</h2>
 
-                        {{ form_start( comment_form ) }}
-                                
-                                <div class="form-group">
-                                    <label    for="content"></label>
-                                    {{ form_row( comment_form.content, { 'label': 'Add comment', 'attr': {'class': 'form-control', 'rows': '4'}} )}}
-                                </div>
+			{% if comment_form  %}
+				{% include "blog/shared/_form_comment.html.twig" %}
+			{% endif %}
 
-                                    {{ form_widget( comment_form.create, { 'attr': {'class': 'btn btn-primary btn-block'}} )}}
-                        {{ form_end( comment_form ) }}       
-                       </div>
-                 </div>
-                 <div class="my-2">   
-                        {% for comment in post.comments | sort(  ) %}
-            
-                        <div class="row">
-                            <div class="col-md-10">
-                                <p>
-                                    <i class="fa fa-user-circle" aria-hidden="true"></i>  <span class="text-primary"> {{ comment.author.username }} </span> 
-                                    <span> 
-                                        &ensp; | &ensp; <i class="fa fa-clock-o" aria-hidden="true"></i>  On {{ comment.createdat | date('d M Y') }}
-                                    </span> 
-                                </p>
 
-                                <p>
-                                    {{ comment.content }}
-                                </p>
-                             
-                            </div>
-                        </div>
-                        <hr>
-                    {% endfor %}
+			<div class="my-2">
+				{% for comment in post.comments | sort(  ) %}
 
-                 </div>
-         
-            </div>
-        </div>
+					<div class="row">
+						<div class="col-md-10">
+							<p>
+								<i class="fa fa-user-circle" aria-hidden="true"></i>
+								<span class="text-primary">
+									{{ comment.author.username }}
+								</span>
+								<span>
+									&ensp; | &ensp;
+									<i class="fa fa-clock-o" aria-hidden="true"></i>
+									On
+									{{ comment.createdat | date('d M Y') }}
+								</span>
+							</p>
 
-    
-     {% endblock %}
+							<p>
+								{{ comment.content }}
+							</p>
+
+						</div>
+					</div>
+					<hr>
+				{% endfor %}
+
+			</div>
+
+		</div>
+	</div>
+
+
+{% endblock %}
