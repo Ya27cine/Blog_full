@@ -3,25 +3,30 @@
 namespace App\Controller\Security;
 
 use App\Entity\User;
+use App\Event\ConstantsEvent;
+use App\Event\MembershipRegistrationEvent;
 use App\Form\RegistrationType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use  Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SecurityConttrollerController extends AbstractController
 {
     /**
      * @Route("/registration", name="security_registration")
      */
-    public function index(Request $request, EntityManagerInterface $objectManager, UserPasswordEncoderInterface $encoder)
+    public function index(Request $request, EntityManagerInterface $objectManager, UserPasswordEncoderInterface $encoder,
+    EventDispatcherInterface $dispatcher)
     {
         $user = new User();
 
         $form = $this->createForm(RegistrationType::class, $user);
 
         $form->handleRequest($request);
+
 
         if($form->isSubmitted() && $form->isValid()){
 
@@ -30,6 +35,9 @@ class SecurityConttrollerController extends AbstractController
 
             $objectManager->persist( $user );
             $objectManager->flush();
+
+            $dispatcher->dispatch(new MembershipRegistrationEvent($user),
+            ConstantsEvent::USER_AFTER_REGISTRATION);
 
             return $this->redirectToRoute('security_login');
         }
@@ -42,7 +50,16 @@ class SecurityConttrollerController extends AbstractController
     /**
      * @Route("/login", name="security_login")
      */
-    public function login(){
+    public function login(EventDispatcherInterface $dispatcher){
+
+        $user = new User;
+        $user->setUsername("Khelifa Yassine")
+        ->setEmail("yaci@gmail.fr")
+        ;
+
+        $dispatcher->dispatch(new MembershipRegistrationEvent($user),
+        ConstantsEvent::USER_AFTER_REGISTRATION);
+
         return $this->render('security/login.html.twig');
     }
 

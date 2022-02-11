@@ -9,21 +9,35 @@ use App\Form\PostType;
 use App\Repository\PostlikeRepository;
 use App\Service\BlogService;
 use App\Service\FileUploaderService;
+use App\Service\MailerService;
 use App\Service\UserService;
 use Share;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class BlogController extends AbstractController
  {
     public function __construct(){}
+
+
+     /**
+      * @Route("/mail", name="blog-mail")
+      */
+      public function sendmail(MailerService $mailerService){
+
+        $mailerService->sendMailier();
+        return new Response("mail sent ");
+      }
+
 
 
      /**
@@ -124,19 +138,18 @@ class BlogController extends AbstractController
          $em    =  $this->getDoctrine()->getManager();
          $em->remove($post);
 
+         //$dispather->dispatch(new GenericEvent($post), "post.delete");
+
          $em->flush();
  
          return $this->redirectToRoute('blog-my-posts');
       }
 
 
-
-
-
     /**
       * @Route("/blog/profil", name="blog-my-posts")
       */
-      public function profil(PaginatorInterface $paginator, Request $request, BlogService $blogService, UserService $userService)
+      public function profil(PaginatorInterface $paginator, Request $request,EventDispatcherInterface $dispatcher , BlogService $blogService, UserService $userService)
       {
         try{
             // get User auth
